@@ -3,13 +3,7 @@ layout: default
 title: 홈
 ---
 
-# Gimin의 기술 블로그
-
-백엔드, 인프라, 네트워크 공부하면서 정리하는 공간입니다.
-
-- Spring / JPA / MySQL
-- AWS (EC2, RDS, VPC)
-- 네트워크 / HTTP / 운영체제
+설계& 트러블 슈팅& 깊게 공부한 내용들을 정리하는 공간입니다.
 
 ## 최근 글
 
