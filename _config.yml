@@ -1,0 +1,13 @@
+title: "Gimin 기술 블로그"
+description: "Spring, JPA, AWS, 네트워크 공부 기록"
+author: "Gimin"
+
+# 깃허브에서 제공하는 기본 테마 (간단하게 시작)
+theme: jekyll-theme-minimal
+
+# 사이트 주소
+url: "https://Gimini-3.github.io"
+baseurl: ""
+
+lang: "ko"
+timezone: "Asia/Seoul"
