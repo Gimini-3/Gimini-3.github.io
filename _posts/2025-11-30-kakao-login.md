@@ -381,6 +381,6 @@ Content-Type: application/x-www-form-urlencoded;charset=utf-8
 
 ```
 
-이제 사용자는 **“카카오 계정으로 로그인한 우리 서비스 사용자”**가 된다.
+이제 사용자는 “카카오 계정으로 로그인한 우리 서비스 사용자”가 된다.
 
 ---
