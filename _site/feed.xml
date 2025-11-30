@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-11-30T22:26:18+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Gimin’s Blog</title><subtitle>시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.</subtitle><entry><title type="html">GitHub Pages 이미지 올리는 법</title><link href="http://localhost:4000/upload/images/2025/11/26/images.html" rel="alternate" type="text/html" title="GitHub Pages 이미지 올리는 법" /><published>2025-11-26T21:06:00+09:00</published><updated>2025-11-26T21:06:00+09:00</updated><id>http://localhost:4000/upload/images/2025/11/26/images</id><content type="html" xml:base="http://localhost:4000/upload/images/2025/11/26/images.html"><![CDATA[<p>GitHub 블로그(Jekyll)에 이미지를 넣는 가장 정석적인 방법이다.</p>
+
+<p>핵심은 <strong>“이미지를 저장할 폴더를 만들고, 그 경로를 마크다운에 적는 것”</strong>이다.</p>
+
+<hr />
+
+<h2 id="1단계-이미지-폴더-만들기">1단계: 이미지 폴더 만들기</h2>
+
+<p>프로젝트 루트(최상위) 위치에 이미지를 모아둘 폴더를 만든다.  <br />
+보통 <code class="language-plaintext highlighter-rouge">assets</code> 안에 <code class="language-plaintext highlighter-rouge">images</code>를 만드는 것이 관례다.</p>
+
+<p>폴더 구조 예시는 다음과 같다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gimini-3.github.io/
+├── _posts/
+│   └── 2025-11-26-start.md
+├── assets/          &lt;-- 이 폴더 생성
+│   └── images/      &lt;-- 이 안에 생성
+│       └── test.png &lt;-- 여기에 사진 넣기
+├── _config.yml
+└── index.md
+</code></pre></div></div>
+<h2 id="2단계-이미지-파일-이름-규칙">2단계: 이미지 파일 이름 규칙</h2>
+
+<p>이미지 파일 이름은 반드시 영문 소문자와 숫자로 짓는 것이 좋다.</p>
+
+<p>좋은 예:</p>
+<ul>
+  <li>aws-architecture.png</li>
+  <li>spring-boot-1.jpg</li>
+</ul>
+
+<p>피해야 할 예:</p>
+<ul>
+  <li>
+    <p>스크린샷 2025.png</p>
+  </li>
+  <li>
+    <p>내 사진 최종 최종.png</p>
+  </li>
+</ul>
+
+<p>한글, 공백, 특수문자가 섞여 있으면 \<br />
+배포 시 경로 인코딩 문제 때문에 이미지가 깨질 확률이 높다.</p>
+
+<h2 id="3단계-마크다운에-이미지-넣기">3단계: 마크다운에 이미지 넣기</h2>
+
+<p>글 파일(예: _posts/2025-11-26-start.md)에서 아래 문법을 사용한다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>![이미지 설명](/assets/images/파일명.png)
+</code></pre></div></div>
+
+<p>실제 예시는 다음과 같다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># AWS 구조도
+
+아래는 제가 설계한 아키텍처입니다.
+
+![AWS Architecture](/assets/images/aws-architecture.png)
+</code></pre></div></div>
+
+<p>이렇게 적으면 /assets/images/aws-architecture.png 경로에 있는 이미지가 글에 표시된다.</p>
+
+<hr />
+<h2 id="주의할-점-경로-설정">주의할 점: 경로 설정</h2>
+
+<p>경로 맨 앞에 <strong>슬래시(/)</strong> 를 꼭 붙여야 한다.</p>
+
+<p>assets/images/… ❌<br />
+→ 현재 글이 있는 폴더(_posts) 기준 상대 경로라,<br />
+Jekyll 빌드/배포 시 이미지를 제대로 찾지 못할 수 있다.</p>
+
+<p>/assets/images/… ✅<br />
+→ 사이트 루트(/) 기준 절대 경로라,<br />
+어느 글에서든 안정적으로 이미지를 불러올 수 있다.</p>
+
+<hr />
+<h2 id="마무리">마무리</h2>
+
+<ol>
+  <li>
+    <p>assets/images 폴더를 만들고</p>
+  </li>
+  <li>
+    <p>영어/숫자 이름으로 이미지를 넣은 뒤</p>
+  </li>
+  <li>
+    <p>글에서 <img src="/assets/images/파일명.png" alt="설명" /> 형식으로 경로를 적고</p>
+  </li>
+  <li>
+    <p>git add, git commit, git push 하면</p>
+  </li>
+</ol>
+
+<p>GitHub Pages(Jekyll) 블로그에서 이미지를 정상적으로 볼 수 있다.</p>
+<pre><code class="language-Markdown">::contentReference[oaicite:0]{index=0}
+</code></pre>]]></content><author><name></name></author><category term="upload" /><category term="images" /><summary type="html"><![CDATA[GitHub 블로그(Jekyll)에 이미지를 넣는 가장 정석적인 방법이다.]]></summary></entry><entry><title type="html">GitHub Pages 필수 규칙들</title><link href="http://localhost:4000/blog/start/2025/11/26/rule.html" rel="alternate" type="text/html" title="GitHub Pages 필수 규칙들" /><published>2025-11-26T21:05:00+09:00</published><updated>2025-11-26T21:05:00+09:00</updated><id>http://localhost:4000/blog/start/2025/11/26/rule</id><content type="html" xml:base="http://localhost:4000/blog/start/2025/11/26/rule.html"><![CDATA[<p>오늘은 GitHub Pages를 이용해서 기술 블로그를 만들었다.</p>
+
+<p>GitHub Pages(Jekyll 엔진)가 인식하는 필수 규칙들을 정리한다.</p>
+
+<h2 id="1-글-파일-이름-규칙-엄격함">1. 글 파일 이름 규칙 (엄격함)</h2>
+<p>_posts 폴더 안의 파일은 반드시 아래 형식을 따라야 한다.</p>
+
+<ul>
+  <li>
+    <p>형식: YYYY-MM-DD-영문제목.md</p>
+  </li>
+  <li>
+    <p>필수: 연, 월, 일, 하이픈(-), 제목이 모두 있어야 한다.</p>
+  </li>
+  <li>
+    <p>주의:</p>
+
+    <ul>
+      <li>2025-11-26.md (X) → 제목이 없어서 인식 불가.</li>
+      <li>hello-world.md (X) → 날짜가 없어서 인식 불가.</li>
+      <li>2025-11-26-start.md (O) → 정상.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="2-디렉토리폴더-명명-규칙">2. 디렉토리(폴더) 명명 규칙</h2>
+<p>Jekyll은 폴더 이름 앞의 언더바(_) 유무에 따라 처리 방식이 다르다.</p>
+
+<ul>
+  <li>
+    <p><em>posts: 글 파일이 저장되는 곳. 언더바(</em>)와 복수형(s) 필수다.</p>
+  </li>
+  <li>
+    <p>_config.yml: 환경 설정 파일. 루트 경로에 있어야 한다.</p>
+  </li>
+  <li>
+    <p>assets 또는 images: 이미지나 CSS 파일 등을 넣는 곳. 여기는 언더바를 붙이지 않는다. (언더바가 붙은 폴더의 파일은 웹에서 직접 주소로 접근할 수 없다.)</p>
+  </li>
+</ul>
+
+<h2 id="3-front-matter-머리말-규칙">3. Front Matter (머리말) 규칙</h2>
+<p>모든 글 파일(md)의 맨 첫 줄은 반드시 Front Matter로 시작해야 한다.</p>
+<ul>
+  <li>형식: — 로 감싸야 한다.</li>
+  <li>위치: 파일의 1번째 줄이어야 한다. 그 앞에 공백이나 빈 줄이 있으면 안 된다.</li>
+</ul>
+
+<pre><code class="language-Markdown">---
+layout: post
+title: "GitHub Pages로 기술 블로그 시작하기"
+date: 2025-11-26 10:00:00 +0900
+categories: blog start
+---
+(여기서부터 본문)
+</code></pre>
+
+<h2 id="4-날짜-및-시간-규칙">4. 날짜 및 시간 규칙</h2>
+<ul>
+  <li>미래의 글: 설정된 date가 현재 시간(GitHub 서버 기준 UTC)보다 미래일 경우, 해당 글은 숨김 처리되어 보이지 않는다.</li>
+  <li>해결: 시간을 넉넉하게 과거로 잡거나, _config.yml에 future: true 설정을 추가해야 한다.</li>
+</ul>
+
+<h2 id="5-변경-사항-반영-규칙">5. 변경 사항 반영 규칙</h2>
+<ul>
+  <li>/수정: git push 후 약 1~3분 내에 자동 반영된다.</li>
+  <li>_config.yml 수정: 설정 파일을 건드렸다면, 변경 사항이 크므로 빌드 시간이 조금 더 걸릴 수 있다. 반영이 안 되면 웹 브라우저 캐시를 삭제하고 새로고침 해봐야 한다.</li>
+</ul>]]></content><author><name></name></author><category term="blog" /><category term="start" /><summary type="html"><![CDATA[오늘은 GitHub Pages를 이용해서 기술 블로그를 만들었다.]]></summary></entry></feed>

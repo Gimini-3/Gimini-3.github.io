@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>
+    
+        Security
+    
+</title>
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Index | Gimin’s Blog</title>
+<meta name="generator" content="Jekyll v4.4.1">
+<meta property="og:title" content="Index">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.">
+<meta property="og:description" content="시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.">
+<link rel="canonical" href="http://localhost:4000/Spring%20Boot/Security/">
+<meta property="og:url" content="http://localhost:4000/Spring%20Boot/Security/">
+<meta property="og:site_name" content="Gimin’s Blog">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="1900-01-01T00:02:36+08:27">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="Index">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"1900-01-01T00:02:36+08:27","datePublished":"1900-01-01T00:02:36+08:27","description":"시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.","headline":"Index","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Spring%20Boot/Security/"},"url":"http://localhost:4000/Spring%20Boot/Security/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link rel="shortcut icon" type="image/png" href="/assets/img/favicon.webp">
+<style>
+@font-face {
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: optional;
+    src: local('Nunito Sans'),
+         url("/assets/fonts/NunitoSans-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: 'Righteous';
+    font-style: normal;
+    font-weight: 600;
+    font-display: optional;
+    src: local('Righteous'),
+         url("/assets/fonts/Righteous-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-display: optional;
+    src: local('Lato'),
+         url("/assets/fonts/Lato-Regular.woff2") format("woff2");
+}
+</style>
+
+<script src="/assets/js/fontfaceobserver.js" type="text/javascript"></script>
+<script type="text/javascript">
+    const nunitoObserver = new FontFaceObserver('Nunito Sans');
+    const righteousObserver = new FontFaceObserver('Righteous');
+    const latoObserver = new FontFaceObserver('Lato');
+  
+    Promise.all([
+        nunitoObserver.load(),
+        righteousObserver.load(),
+        latoObserver.load(),
+    ]).then(function(){
+        document.documentElement.className += " fonts-loaded";
+    });
+</script>
+
+<meta name="baseurl" content="">
+<meta name="description" content="시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.">
+        <link rel="preload" href="/assets/img/profile.jpg" as="image">
+        <link rel="stylesheet" href="/assets/css/style.css">
+        
+    </head>
+    <body>
+        <script type="text/javascript">
+            let currentTheme = localStorage.getItem('theme');
+        
+            document.body.classList[currentTheme === 'dark' ? 'add' : 'remove']('dark-theme');
+        </script>
+        <canvas id="stars" width="100%" height="100%"></canvas>
+        <div class="sidebar sidebar-left">
+    <div class="side-banner">
+        <h1 class="site-tab">
+            <a href="/" class="site-name">
+                <img src="/assets/img/icon/house.webp" alt="" loading="lazy">
+                <mark>Gimin's Blog</mark>
+            </a>
+            <button id="btn-brightness" aria-label="brightness-button">
+                <svg class="ico-dark" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 384 512"><path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg>
+                <svg class="ico-light" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512"><path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"></path></svg>
+            </button>
+            <button id="btn-search" aria-label="search-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
+            </button>
+            <button id="btn-nav" aria-pressed="false" aria-label="menu-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"></path></svg>
+            </button>
+        </h1>
+        <a href="/" class="site-avatar" aria-label="site-avatar">
+            <img src="/assets/img/profile.jpg" loading="lazy" alt="homepage" aria-label="homepage-button">
+        </a>
+    </div>
+    <div class="side-info">
+        <nav id="navigation">
+    
+    
+    
+
+    
+
+        
+    
+
+        
+    
+
+        
+    
+
+        
+    
+
+        
+    
+            
+
+    
+    
+    
+
+    <ul class="nav-list">
+<li id="nav-first" aria-label="Spring Boot">
+            <div class="nav-item">
+                <a href="/Spring%20Boot/" class="nav-list-link nav-lh">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128h95.1l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H347.1L325.8 320H384c17.7 0 32 14.3 32 32s-14.3 32-32 32H315.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7H155.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l21.3-128H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320h95.1l21.3-128H187.1z"></path></svg>
+                    <span>Spring Boot</span>
+                </a><button class="nav-list-expander" aria-label="toggle items in Spring Boot category" aria-pressed="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>
+                </button>
+</div>
+<ul class="nav-list"><li id="nav-second" aria-label="Security">
+                    <div class="nav-item">
+                        <a href="/Spring%20Boot/Security/" class="nav-list-link nav-sh">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg>
+                            <span>Security</span>
+                        </a>
+</div>
+</li></ul>
+</li>
+<li id="nav-first" aria-label="System Architecture">
+            <div class="nav-item">
+                <a href="/System%20Architecture/" class="nav-list-link nav-lh">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128h95.1l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H347.1L325.8 320H384c17.7 0 32 14.3 32 32s-14.3 32-32 32H315.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7H155.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l21.3-128H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320h95.1l21.3-128H187.1z"></path></svg>
+                    <span>System Architecture</span>
+                </a>
+</div>
+</li>
+<li id="nav-first" aria-label="Trouble Shooting">
+            <div class="nav-item">
+                <a href="/Trouble%20Shooting/" class="nav-list-link nav-lh">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128h95.1l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H347.1L325.8 320H384c17.7 0 32 14.3 32 32s-14.3 32-32 32H315.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7H155.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l21.3-128H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320h95.1l21.3-128H187.1z"></path></svg>
+                    <span>Trouble Shooting</span>
+                </a>
+</div>
+</li>
+<li id="nav-first" aria-label="Home">
+            <div class="nav-item">
+                <a href="/" class="nav-list-link nav-lh">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128h95.1l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H347.1L325.8 320H384c17.7 0 32 14.3 32 32s-14.3 32-32 32H315.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7H155.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l21.3-128H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320h95.1l21.3-128H187.1z"></path></svg>
+                    <span>Home</span>
+                </a>
+</div>
+</li>
+</ul>
+</nav>
+        <div id="contact">
+            <hr>
+            <h3>Contact</h3>
+            <ul class="contact-list">
+                
+                    <li><a aria-label="My Github" href="https://github.com/Gimini-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+                    </a></li>
+                
+                
+                    <li><a aria-label="My Email" href="mailto:gimin1463@naver.com">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"></path></svg>
+                    </a></li>
+                
+                
+                
+                    <li><a aria-label="My Instagram" href="https://www.instagram.com/gimin0226">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path></svg>
+                    </a></li>
+                
+                
+                
+                    <li><a aria-label="My LinkedIn" href="https://www.linkedin.com/in/Gm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
+                    </a></li>
+                
+            </ul>
+            <hr>
+            <span>
+                Copyright © 2024 | <a href="https://github.com/byanko55/jekyll-theme-satellite">Yankos</a>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="sidebar sidebar-right">
+    <div class="tools">
+        <button id="btn-brightness" aria-label="brightness-button">
+            <svg class="ico-dark" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 384 512"><path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg>
+            <svg class="ico-light" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512"><path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"></path></svg>
+        </button>
+        <button id="btn-search" aria-label="search-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
+        </button>
+    </div>
+</div>
+        <div id="post">
+            <div class="inner-header">
+                <span class="dot" style="background-color: #F86158;"></span>
+                <span class="dot" style="background-color: #FBBF2D;"></span>
+                <span class="dot" style="background-color: #2ACB45;"></span>
+            </div>
+            <div class="inner-content">
+                <div class="category-tree">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 576 512"><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"></path></svg>
+    <p>
+                <a href="/">Home</a>
+                &gt;
+            <a href="/Spring%20Boot/">Spring Boot</a>
+                &gt;
+            
+                
+                    Security
+                
+            </p>
+</div>
+                
+                    <div id="loading">
+    <div class="loading_box">
+        <img src="/assets/img/loading.webp" loading="lazy">
+        <p>Now Loading ...</p>
+    </div>
+</div>
+                    <h1 class="category-header">
+    
+        Security
+    
+</h1>
+<div id="category-list">
+    <ul class="paginated-list" data-current-page="1" aria-live="polite">
+        <li class="paginated-item">
+                <div id="article_content">
+                    <div class="thumbnail_zone">
+                        
+                            <a href="/Spring%20Boot/Security/2025-11-30-kakao-login.html" class="thumbnail_post" loading="lazy" aria-label="thumbnail_post" style="background-image:url('/assets/img/thumbnail/kakao-oauth-login.png') !important"></a>
+                        
+                    </div>
+                    <div class="box_contents">
+                        <a href="/Spring%20Boot/Security/2025-11-30-kakao-login.html"><h1 class="title_post">카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우</h1></a>
+                        <a href="/Spring%20Boot/Security/2025-11-30-kakao-login.html" class="txt_post">
+                            카카오 로그인 동작과정 분석하기(sdk 방식)
+
+[전제 조건 및 설계 원칙]
+
+
+  환경 전제
+    
+      웹 브라우저 기준으로 설명한다.
+      
+        모바일 앱이라면 authorize() 호출 시 카카오톡 앱이 먼저 실행되고,
+
+        그 안의 WebView에서 kauth.kakao.com 페이지를 띄워 로그인/동의가 진행된다.
+      
+    
+  
+  로그인 시작 방식
+    
+      
+        로그인 버튼 클릭 시, 프론트에서 백엔드를 거치지 않고 바로
+
+        Kakao.Auth.authorize() 를 호출한다.
+      
+      
+        이 호출은 브라우저를 https://kauth.kakao.com/oauth/authorize 로 이동시킨다.
+
+        → 프론트 → (백엔드 패스) → Kakao Auth Server
+      
+    
+  
+  인가 코드 수신 주체
+    
+      redirect_uri 를 프론트 주소로 설정한다.
+      
+        동의 완료 후, Kakao Auth Server는
+
+        302 Location: {redirect_uri}?code=... 로 응답한다.
+      
+      브라우저가 이 redirect_uri(프론트 URL)로 이동하면서 인가 코드는 먼저 프론트가 받는다.
+      프론트는 URL에서 code를 추출해 백엔드 로그인 API로 전달하여 토큰 발급·회원 처리 등을 진행한다.
+    
+  
+
+
+전체 아키텍처
+
+
+
+1. 사용자가 로그인 버튼 클릭: 프론트 → Kakao Auth 서버
+
+사용자가 우리 사이트에서 “카카오로 로그인” 버튼을 누른다.
+
+JS SDK 방식에서는 이 버튼 클릭이 결국 카카오 JS SDK의 authorize 호출로 이어지고,
+
+이 함수는 브라우저의 주소를 카카오 Auth 서버의 인가 엔드포인트로 바꾸어 버린다.
+
+Kakao.Auth.authorize({
+	redirectUri: 'http://localhost:5173/oauth/kakao/callback'
+});
+
+
+결국 이 호출은 다음과 같이 나가게 된다.
+
+https://kauth.kakao.com/oauth/authorize?
+	client_id=
+	&amp;redirect_uri=http://localhost:5173/oauth/kakao/callback
+	&amp;response_type=code 
+
+
+여기서 중요한 점은:
+
+
+  이 시점에는 우리 백엔드를 전혀 거치지 않는다는 것.
+  브라우저는 곧바로 kauth.kakao.com으로 이동해서 카카오 Auth 서버와 통신한다는 것.
+
+
+로그인 시작부터 브라우저 ↔ 카카오 Auth 서버가 직접 붙는 구조다.
+
+1-1. 로그인 안 되어 있을 때 : Auth → Account → Auth 왕복
+
+
+
+카카오 Auth 서버 입장에서, 브라우저가 보낸 인가 코드 요청을 받았다.
+
+
+  Auth 서버는 이 브라우저에 카카오 계정 로그인 세션이 있는지 확인한다.
+  로그인 세션이 없다면, “먼저 카카오 계정 로그인을 시켜야 한다”고 판단한다.
+  
+    그래서 Auth 서버는 브라우저에게 “카카오 Account 서버로 가라”는 의미의 302 리다이렉트 응답을 보낸다.
+
+    이때 응답의 Location 헤더에는 Account 서버의 로그인 URL과 함께 continue라는 파라미터가 붙어 있다.
+  
+
+
+
+  continue 파라미터
+
+
+
+  로그인까지 끝난 뒤 다시 돌아와야 할 Auth 서버의 /oauth/authorize 요청 전체를 그대로 기억해 두는 것
+
+
+
+https://accounts.kakao.com/login?
+continue=https%3A%2F%2Fkauth.kakao.com%2Foauth%2Fauthorize%3Fclient_id%3Dd2ffdfaa297012904086e71f5d7eda1f%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A3000%252Foauth%252Fkakao%252Fcallback%26response_type%3Dcode%26through_account%3Dtrue%26auth_tran_id%3DwbrMy9IcVMYhPjgkbCpf7-TiGF7balKdB--tpTWfCg0VmwAAAZrDiMg9#login
+
+
+continue= 뒤에 있는 건 전부 URL 인코딩된 문자열이다.
+
+
+  
+    URL 디코더를 통해서 위의 인코딩된 문자열 디코딩 결과
+
+      https://accounts.kakao.com/login?
+  continue=https://kauth.kakao.com/oauth/authorize?
+  client_id={client_id}&amp;
+  redirect_uri=http://localhost:5173/oauth/kakao/callback&amp;
+  response_type=code&amp;
+  through_account=true&amp;
+  auth_tran_id=wbrMy9IcVMYhPjgkbCpf7-TiGF7balKdB--tpTWfCg0VmwAAAZrDiMg9#login
+    
+
+    
+      continue=
+    
+
+    → 우리가 원래 쳤던 인가 코드 받는 엔드포인트
+
+    
+      client_id=…
+    
+
+    →  JS SDK 플로우에서는 JavaScript 키가 client_id로 사용된다.
+
+    
+      redirect_uri
+    
+
+    → 동의 후 인가 코드를 보내줄 프론트 주소(백으로 설정하면 백주소)
+
+    
+      response_type = code
+    
+
+    → OAuth2에서 인가 코드 플로우를 쓰겠다는 뜻
+
+    
+      through_account = true
+    
+
+    → 계정 로그인 서버를 통해서 처리하는 중이다 정도의 카카오 내부 플래그
+
+    
+      auth_tran_id=
+    
+
+    → 카카오가 이 인증 트랜잭션을 추적하기 위한 내부 트랜잭션 ID
+  
+
+
+브라우저는 Auth 서버가 보내준 Location 값을 그대로 따라가서 Account 서버의 로그인 페이지를 연다.
+
+
+
+이제 사용자는 이 페이지에서 카카오 계정 이메일과 비밀번호를 입력하고 로그인 버튼을 누른다.
+
+로그인이 성공하면 Account 서버는 continue에 들어 있던 인가 요청 URL을 꺼내서,
+
+다시 그 URL로 302 리다이렉트를 보낸다.
+
+브라우저는 또 한 번 302 Location을 따라가서 다시 Auth 서버의 /oauth/authorize 로 돌아간다.
+
+로그인 버튼 누른 뒤에 일어나는 일
+
+
+  사용자는 여기서 아이디 비밀번호를 누르고 로그인 버튼을 누른다.
+  
+    로그인 버튼을 누르면 이 폼을 Account 서버로 제출한다.
+
+    → 예: POST https://accounts.kakao.com/login 같은 요청
+  
+  
+    Account 서버가 ID/비번 검증해서 로그인 성공 처리하고 내부에서 continue 파라미터에 있던 값을 꺼내서 응답으로 돌려준다.
+
+     HTTP/1.1 302 Found
+ Location: https://kauth.kakao.com/oauth/authorize?client_id=...&amp;redirect_uri=...&amp;response_type=code&amp;...
+    
+  
+  
+    브라우저는 이 Location 헤더를 보고
+
+    → 자동으로 
+  GET https://kauth.kakao.com/oauth/authorize?... 요청을 다시 보냄
+
+     https://kauth.kakao.com/oauth/authorize?
+ client_id={client_id}&amp;
+ redirect_uri=http://localhost:5173/oauth/kakao/callback&amp;
+ response_type=code
+    
+  
+
+
+브라우저가 302 응답을 받자마자 순식간에 다음 주소로 이동하기 때문에 육안으로는 볼 수 없다.
+
+
+  확인 방법
+    
+      F12를 눌러 개발자 도구를 연다.
+      상단 탭 중 Network 탭을 클릭한다.
+      Network 탭 상단 메뉴바에 있는 Preserve log (로그 보존) 체크박스를 반드시 체크한다.
+        
+          이걸 체크하지 않으면, 페이지가 accounts에서 kauth로 이동(리다이렉트)하는 순간 이전 기록이 전부 지워져서 302 응답을 볼 수 없다.
+        
+      
+      이제 브라우저에서 로그인 버튼을 눌러 로그인을 시도한다.
+      Network 탭의 리스트 중에서 login 혹은 authorize 라는 이름의 요청을 찾는다.
+      Status(상태) 코드가 302 인 항목을 클릭한다.
+      오른쪽 상세 창의 Response Headers(응답 헤더) 탭을 보면 Location 항목에 네가 찾던 그 URL(https://kauth.kakao.com/...)이 적혀 있는 것을 확인할 수 있다.
+    
+  
+
+
+2. 동의 화면: Auth 서버가 HTML을 내려주고, 브라우저가 렌더링한다.
+
+현재 상태
+
+
+  브라우저는 카카오 계정에 로그인된 상태다.
+  Auth 서버는 인가 코드 요청을 정상적으로 받을 수 있는 상태다.
+
+
+Auth 서버는 이 요청에 대해 다음과 같이 행동한다.
+
+
+  
+    사용자가 이 앱(우리 서비스)에 처음 접근했다면
+
+    → 어떤 정보(프로필, 이메일 등)를 제공할지 보여주는 동의 화면을 내려준다.
+  
+  
+    이미 예전에 한 번 동의한 앱이라면
+
+    → 동의 화면을 생략하고 바로 인가 코드 발급으로 넘어갈 수 있다.
+  
+
+
+여기서 중요한 점:
+
+
+  동의 화면은 항상 웹 페이지다.
+  서버는 Auth 서버(kauth)에서 HTML을 내려주고,
+  클라이언트가 브라우저라면 브라우저가,
+카카오톡 앱이라면 카카오톡 앱 안의 WebView가 그 HTML을 렌더링할 뿐이다.
+
+
+웹 기준에서는 그냥 브라우저에서 카카오 동의 화면 페이지를 보는 것이라고 이해하면 된다.
+
+
+
+3. 동의하고 계속하기
+
+사용자가 동의 화면에서 “동의하고 계속하기” 버튼을 누른다.
+
+
+  브라우저는 이 버튼을 누르면서 Auth 서버로 폼 제출/JS 요청을 보내고,
+  Auth 서버는 내부적으로 인가 코드(code)를 하나 발급한 뒤,
+  아래와 같이 응답한다.
+
+
+HTTP/1.1 302 Found
+Location: {redirect_uri}?code=AUTH_CODE&amp;state=STATE_VALUE
+
+
+
+중요한 점:
+
+
+  redirect_uri는 우리가 처음 /oauth/authorize 요청에 넘겨줬던 값이다.
+  
+    Auth 서버는 이 값을 그대로 끌고 와서 뒤에 ?code=...&amp;state=... 를 붙인 뒤
+
+    Location 헤더에 넣는다.
+  
+  브라우저는 “redirect_uri”라는 개념을 모른다.
+    
+      302의 Location에 해당하는 URL로 이동할 뿐이다.
+    
+  
+
+
+
+
+4. redirect_uri가 프론트 일 때
+
+우리는 전제로 redirect_uri를 프론트 주소로 놓았다.
+
+redirect_uri = http://localhost:5173/oauth/kakao/callback
+
+
+그럼 Auth 서버의 응답은 대략 이렇게 된다.
+
+HTTP/1.1 302 Found
+Location: http://localhost:5173/oauth/kakao/callback?code=AUTH_CODE&amp;state=...
+
+
+브라우저는 이걸 보고:
+
+GET http://localhost:5173/oauth/kakao/callback?code=AUTH_CODE&amp;state=...
+
+
+를 다시 호출한다.
+
+이 시점에 일어나는 일:
+
+
+  이 URL에 매핑된 프론트 라우트(React/Vite) 가 로드된다.
+
+
+이렇게 하면 인가 코드는 백엔드가 직접 받는 것이 아니라, 브라우저(프론트)가 URL로 전달받고 → 백엔드로 다시 넘기는 구조가 된다.
+
+
+
+5. 백엔드: 인가 코드 → 액세스 토큰 교환
+
+
+
+프론트에서 /api/auth/kakao/login 으로 code를 넘기면,
+
+이제부터는 백엔드(Spring) 의 역할이다.
+
+
+  
+    카카오 Auth 서버의 /oauth/token 엔드포인트를 호출한다.
+
+     POST https://kauth.kakao.com/oauth/token
+ Content-Type: application/x-www-form-urlencoded
+    
+ grant_type=authorization_code
+ &amp;client_id=REST_API_KEY
+ &amp;redirect_uri=http://localhost:5173/oauth/kakao/callback
+ &amp;code=AUTH_CODE
+    
+    
+
+    여기서 중요한 점:
+
+    
+      이때 client_id로 사용하는 것은 REST API 키다.
+      프론트(Javascript SDK)에서는 JavaScript 키를 사용한다.
+      REST API 키는 백엔드에서만 사용해야 하는 비공개 키다.
+    
+  
+  
+    응답으로 액세스 토큰/리프레시 토큰을 받는다.
+  
+
+
+{
+"token_type": "bearer",
+"access_token": "ACCESS_TOKEN",
+"expires_in": 21599,
+"refresh_token": "REFRESH_TOKEN",
+"refresh_token_expires_in": 5183999,
+"scope": "profile_nickname account_email"
+}
+
+
+
+
+6. 백엔드: Kakao API Server에서 유저 정보 조회
+
+
+
+이제 백엔드는 받은 access_token을 이용해
+
+Kakao API Server (kapi.kakao.com) 에서 유저 정보를 조회한다.
+
+GET https://kapi.kakao.com/v2/user/me
+Authorization: Bearer ACCESS_TOKEN
+Content-Type: application/x-www-form-urlencoded;charset=utf-8
+
+
+
+응답 예시는 대략 이런 형태다.
+
+{
+  "id": 1234567890,
+  "kakao_account": {
+    "profile": {
+      "nickname": "홍길동",
+      "profile_image_url": "..."
+    },
+    "email": "example@kakao.com",
+    "has_email": true,
+    "is_email_valid": true,
+    "is_email_verified": true}
+}
+
+
+
+이 정보를 기반으로 우리 도메인에서:
+
+
+  SocialAccount 엔티티 (provider=KAKAO, social_user_id=카카오 id) 생성/조회
+  Member 엔티티와 1:N 관계로 묶기
+  이메일/전화번호로 기존 회원과 연결 여부 판단
+  신규 가입이면 Member 생성, 기존 회원이면 해당 Member에 소셜 계정 추가
+
+
+같은 작업을 수행하면 된다.
+
+
+
+7. 우리 서비스 토큰 발급 및 최종응답
+
+
+
+마지막으로, 우리 서비스 자체의 로그인 처리를 한다.
+
+
+  Member / SocialAccount 기준으로 실제 사용자 식별
+  우리 서비스용 JWT Access Token / Refresh Token 발급
+  프론트로 응답
+
+
+예:
+
+{
+  "accessToken": "OUR_SERVICE_ACCESS_TOKEN",
+  "refreshToken": "OUR_SERVICE_REFRESH_TOKEN",
+  "member": {
+    "id": 100,
+    "nickname": "김기민",
+    "role": "PARENT"
+  }
+}
+
+
+
+이제 사용자는 “카카오 계정으로 로그인한 우리 서비스 사용자”가 된다.
+
+
+
+                        </a>
+                        <div class="info-post">
+                                <a href="/Spring%20Boot" class="category">Spring Boot</a>
+                            
+                                <span class="date">· 2025-11-30</span>
+                            
+                        </div>
+                    </div>
+                </div>
+            </li>
+        
+        
+        
+        </ul>
+    
+</div>
+<div class="pagination">
+    <nav class="pagination-container">
+        <button class="pagination-button" id="prev-button" aria-label="Previous page" title="Previous page">
+            &lt;
+        </button>
+    
+        <div id="pagination-numbers"></div>
+      
+        <button class="pagination-button" id="next-button" aria-label="Next page" title="Next page">
+            &gt;
+        </button>
+    </nav>
+</div>
+                
+            </div>
+        </div>
+        <div id="search">
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+
+    <div class="search-box">
+        <mark>Touch background to close</mark>
+        <div class="input-box">
+            <input id="search-input" type="search" tabindex="1" spellcheck="false" placeholder="Search...">
+            <button id="btn-clear">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg>
+            </button>
+        </div>
+        <ul id="search-result"></ul>
+    </div>
+</div>
+    </body>
+    <script defer src="/assets/js/background.js"></script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+
+    gtag('js', new Date());
+    gtag('config', '');
+</script>
+    
+        <script src="/assets/js/subject.js"></script>
+    
+    <script src="/assets/js/common.js"></script>
+    <script defer>
+    var posts = [];
+
+    
+
+        posts.push({
+            'title'    : "Index",
+            'path'     : "Spring Boot > Security",
+            'type'     : "category",
+            'tags'     : "",
+            'url'      : "/Spring%20Boot/Security/index.html",
+            'image'    : "/assets/img/thumbnail/empty.jpg",
+            'date'     : "1900-01-01"
+        });
+    
+
+        posts.push({
+            'title'    : "Index",
+            'path'     : "Spring Boot",
+            'type'     : "category",
+            'tags'     : "",
+            'url'      : "/Spring%20Boot/index.html",
+            'image'    : "/assets/img/thumbnail/empty.jpg",
+            'date'     : "1900-01-01"
+        });
+    
+
+        posts.push({
+            'title'    : "Index",
+            'path'     : "System Architecture",
+            'type'     : "category",
+            'tags'     : "",
+            'url'      : "/System%20Architecture/index.html",
+            'image'    : "/assets/img/thumbnail/empty.jpg",
+            'date'     : "1900-01-01"
+        });
+    
+
+        posts.push({
+            'title'    : "Index",
+            'path'     : "Trouble Shooting",
+            'type'     : "category",
+            'tags'     : "",
+            'url'      : "/Trouble%20Shooting/index.html",
+            'image'    : "/assets/img/thumbnail/empty.jpg",
+            'date'     : "1900-01-01"
+        });
+    
+
+        posts.push({
+            'title'    : "Index",
+            'path'     : "",
+            'type'     : "category",
+            'tags'     : "",
+            'url'      : "/index.html",
+            'image'    : "/assets/img/thumbnail/empty.jpg",
+            'date'     : "1900-01-01"
+        });
+    
+
+        posts.push({
+            'title'    : "카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우",
+            'path'     : "Spring Boot > Security",
+            'type'     : "post",
+            'tags'     : "OAuth2, Spring Security, Kakao Login",
+            'url'      : "/Spring%20Boot/Security/2025-11-30-kakao-login.html",
+            'image'    : "/assets/img/thumbnail/kakao-oauth-login.png",
+            'date'     : "2025-11-30"
+        });
+    
+
+    searchPost(posts);
+
+    
+</script>
+</html>

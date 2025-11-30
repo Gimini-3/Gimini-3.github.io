@@ -1,8 +1,11 @@
 ---
-layout: post
 title: "카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우"
 date: 2025-11-30 20:30:00 +0900
-categories: OAuth2, Spring Security, Kakao Login
+tags:
+  - OAuth2
+  - Spring Security
+  - Kakao Login
+thumbnail: "/assets/img/thumbnail/kakao-oauth-login.png"
 ---
 
 

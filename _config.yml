@@ -1,13 +1,54 @@
-title: "Gimin 기술 블로그"
-description: "Spring, JPA, AWS, 네트워크 공부 기록"
-author: "Gimin"
+title: "Gimin's Blog"
+description: "시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다."
+url: "https://gimini-3.github.io"
+logo_img: "/assets/img/favicon.webp"
+profile_img: "/assets/img/profile.jpg"
 
-# 깃허브에서 제공하는 기본 테마 (간단하게 시작)
-theme: jekyll-theme-minimal
+# Social Links
+email: gimin1463@naver.com
+github_username: Gimini-3
+#twitter_username:
+instagram_username: gimin0226
+linkedin_username: Gm
+#facebook_username: facebook
 
-# 사이트 주소
-url: "https://Gimini-3.github.io"
+# External API
+#giscus_repo: "byanko55/jekyll-theme-satellite"
+#giscus_repoId: "R_kgDOJ6fqWg"
+#giscus_category: "Q&A"
+#giscus_categoryId: "DIC_kwDOJ6fqWs4Cc7p7"
+#goatcounter_code: byanko77
+#google_analytics:
+
+# If your repo name follows the format "<user-name>.github.io", then leave the below blank.
+# Otherwise, set its value as "/<repo-name>". ex) baseurl: /myblog
 baseurl: ""
 
-lang: "ko"
-timezone: "Asia/Seoul"
+# Build settings
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-loading-lazy
+
+exclude:
+  - docs/
+
+collections:
+  pages:
+    output: true
+    permalink: /:path.html
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+      date: "1900-01-01"
+
+# Markdown newline activator 
+kramdown:
+  input: GFM
+  hard_wrap: true
