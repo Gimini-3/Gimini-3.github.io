@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>
     
-        Trouble Shooting
+        Java
     
 </title>
 <!-- Begin Jekyll SEO tag v2.8.0 -->
@@ -17,15 +17,15 @@
 <meta property="og:locale" content="en_US">
 <meta name="description" content="시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.">
 <meta property="og:description" content="시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.">
-<link rel="canonical" href="http://localhost:4000/Trouble%20Shooting/">
-<meta property="og:url" content="http://localhost:4000/Trouble%20Shooting/">
+<link rel="canonical" href="http://localhost:4000/Java/">
+<meta property="og:url" content="http://localhost:4000/Java/">
 <meta property="og:site_name" content="Gimin’s Blog">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="1900-01-01T00:02:36+08:27">
 <meta name="twitter:card" content="summary">
 <meta property="twitter:title" content="Index">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"1900-01-01T00:02:36+08:27","datePublished":"1900-01-01T00:02:36+08:27","description":"시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.","headline":"Index","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Trouble%20Shooting/"},"url":"http://localhost:4000/Trouble%20Shooting/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"1900-01-01T00:02:36+08:27","datePublished":"1900-01-01T00:02:36+08:27","description":"시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.","headline":"Index","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Java/"},"url":"http://localhost:4000/Java/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -254,7 +254,7 @@
                 &gt;
             
                 
-                    Trouble Shooting
+                    Java
                 
             </p>
 </div>
@@ -267,18 +267,541 @@
 </div>
                     <h1 class="category-header">
     
-        Trouble Shooting
+        Java
     
 </h1>
 <div id="category-list">
     <ul class="paginated-list" data-current-page="1" aria-live="polite">
+        <li class="paginated-item">
+                <div id="article_content">
+                    <div class="thumbnail_zone">
+                        
+                            <a href="/Java/monitor-lock-1.html" class="thumbnail_post" loading="lazy" aria-label="thumbnail_post" style="background-image:url('') !important"></a>
+                        
+                    </div>
+                    <div class="box_contents">
+                        <a href="/Java/monitor-lock-1.html"><h1 class="title_post">[Java Concurrency] 모니터 락과 wait/notifyAll로 턴 스케줄러 구현하기</h1></a>
+                        <a href="/Java/monitor-lock-1.html" class="txt_post">
+                            모니터락
+
+public class StartTest2_2Main {
+
+    //thread1 한 번 -&gt; thread2 한 번 -&gt; thread1 한 번 -&gt; thread2 한 번 -&gt; ...
+    //순서 고정
+
+    static final Object TURN_LOCK = new Object();
+    static String next = "counter1";
+
+    public static void main(String[] args){
+        Thread thread1 = new Thread(new CounterRunnable(),"counter1");
+        Thread thread2 = new Thread(new CounterRunnable(),"counter2");
+        thread2.start();
+        thread1.start();
+    }
+
+    static class CounterRunnable implements Runnable {
+        public void run(){
+            for(int i=1;i&lt;=5;i++){
+                try{
+                    System.out.println(i+"번째 반복"+Thread.currentThread().getName()+" synchronized 들어가기 전"+ " 모니터락 보유 여부: "+Thread.holdsLock(TURN_LOCK));
+                    synchronized(TURN_LOCK){
+                        System.out.println(Thread.currentThread().getName()+" synchronized 들어간 후"+ " 모니터락 보유 여부: "+Thread.holdsLock(TURN_LOCK));
+                        while(!Thread.currentThread().getName().equals(next)){
+                            System.out.println(Thread.currentThread().getName()+" WAIT!"+ " 모니터락 보유 여부: "+Thread.holdsLock(TURN_LOCK));
+                            TURN_LOCK.wait();
+                            System.out.println(Thread.currentThread().getName()+" WAIT 풀림!"+ " 모니터락 보유 여부: "+Thread.holdsLock(TURN_LOCK));
+                        }
+                        log("value: "+i);
+
+                        next = next.equals("counter1")?"counter2":"counter1";
+                        TURN_LOCK.notifyAll();
+                        System.out.println(Thread.currentThread().getName()+" notifyAll() 후"+ " 모니터락 보유 여부: "+Thread.holdsLock(TURN_LOCK));
+                    }
+                }catch(InterruptedException e){
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
+}
+
+
+코드 분석
+
+의도
+
+두 스레드(counter1, counter2) 가 정해진 순서로 번갈아가며 작업을 수행하도록 만드는 턴 스케줄러를 구현했다.
+
+핵심 요소
+
+
+  TURN_LOCK: Object 모니터. synchronized(TURN_LOCK)로 임계영역을 보호한다.
+    
+      모든 객체는 모니터를 가지고 있으므로, 단순히 락 용도로 쓸 객체를 new Object()로 만들었다.
+    
+  
+  next: 이번 턴의 합의된 상태. "counter1" 또는 "counter2" 문자열로 현재 차례를 표현한다.
+  while (!Thread.currentThread().getName().equals(next)) { TURN_LOCK.wait(); }
+    
+      가드 조건. 내 차례가 아니면 곧바로 대기로 전환하고, 깨어난 뒤에도 조건을 반드시 재검사한다.
+    
+  
+  next = ... ? "counter2" : "counter1";
+    
+      임계영역에서 턴을 전환한다. 다음 차례를 명시적으로 선언한다.
+    
+  
+  TURN_LOCK.notifyAll();
+    
+      턴을 바꾼 뒤, 같은 모니터의 Wait Set에 있는 모든 스레드를 깨운다.
+    
+  
+  로그
+    
+      각 지점에서 락 보유 여부를 눈으로 확인하려는 디버깅용 출력이다.
+    
+  
+
+
+왜 이 실험을 하는가?
+
+
+  모니터 모델을 눈으로 확인
+    
+      “어느 시점에 락을 보유하는지/놓는지” 명확히 보기 위해서
+    
+  
+  notifyAll() 의 의미를 체감
+    
+      알림은 락을 넘기는 행위기 아님을 확인하고, 알림 뒤에도 실제 실행은 락 재경쟁으로 결정된다는 사실을 출력으로 관찰한다.
+    
+  
+  “스케줄러가 누구에게 CPU를 먼저 주든,최종 순서는 공유 상태가 보장한다”점을 실험으로 증명한다.
+    
+      운영체제의 스케줄러는 어떤 스레드에게 CPU를 먼저 줄지 전혀 보장하지 않는다.
+      예를 들어:
+        
+          counter1 이 락을 놓자마자 OS가 또 다시 counter1 에게 줄 수도 있고,
+          아니면 counter2 에게 바로 CPU를 줄 수 있다.
+        
+      
+      즉, CPU 실행 순서는 비결정적이다.
+      CPU를 누가 먼저 차지하든 상관없이, 공유 상태(next)와 가드(while)가 순서를 보장한다는 의미이다.
+    
+  
+
+
+결과 분석
+
+1번째 반복counter2 synchronized 들어가기 전 모니터락 보유 여부: false
+1번째 반복counter1 synchronized 들어가기 전 모니터락 보유 여부: false
+counter2 synchronized 들어간 후 모니터락 보유 여부: true
+counter2 WAIT! 모니터락 보유 여부: true
+counter1 synchronized 들어간 후 모니터락 보유 여부: true
+11:49:28.376 [ counter1] value: 1
+counter1 notifyAll() 후 모니터락 보유 여부: true
+2번째 반복counter1 synchronized 들어가기 전 모니터락 보유 여부: false
+counter2 WAIT 풀림! 모니터락 보유 여부: true
+11:49:28.384 [ counter2] value: 1
+counter2 notifyAll() 후 모니터락 보유 여부: true
+2번째 반복counter2 synchronized 들어가기 전 모니터락 보유 여부: false
+counter2 synchronized 들어간 후 모니터락 보유 여부: true
+counter2 WAIT! 모니터락 보유 여부: true
+counter1 synchronized 들어간 후 모니터락 보유 여부: true
+11:49:28.386 [ counter1] value: 2
+counter1 notifyAll() 후 모니터락 보유 여부: true
+3번째 반복counter1 synchronized 들어가기 전 모니터락 보유 여부: false
+counter1 synchronized 들어간 후 모니터락 보유 여부: true
+counter1 WAIT! 모니터락 보유 여부: true
+counter2 WAIT 풀림! 모니터락 보유 여부: true
+11:49:28.386 [ counter2] value: 2
+counter2 notifyAll() 후 모니터락 보유 여부: true
+3번째 반복counter2 synchronized 들어가기 전 모니터락 보유 여부: false
+counter2 synchronized 들어간 후 모니터락 보유 여부: true
+counter2 WAIT! 모니터락 보유 여부: true
+counter1 WAIT 풀림! 모니터락 보유 여부: true
+11:49:28.388 [ counter1] value: 3
+counter1 notifyAll() 후 모니터락 보유 여부: true
+4번째 반복counter1 synchronized 들어가기 전 모니터락 보유 여부: false
+counter2 WAIT 풀림! 모니터락 보유 여부: true
+11:49:28.389 [ counter2] value: 3
+counter2 notifyAll() 후 모니터락 보유 여부: true
+4번째 반복counter2 synchronized 들어가기 전 모니터락 보유 여부: false
+counter1 synchronized 들어간 후 모니터락 보유 여부: true
+11:49:28.390 [ counter1] value: 4
+counter1 notifyAll() 후 모니터락 보유 여부: true
+5번째 반복counter1 synchronized 들어가기 전 모니터락 보유 여부: false
+counter1 synchronized 들어간 후 모니터락 보유 여부: true
+counter1 WAIT! 모니터락 보유 여부: true
+counter2 synchronized 들어간 후 모니터락 보유 여부: true
+11:49:28.391 [ counter2] value: 4
+counter2 notifyAll() 후 모니터락 보유 여부: true
+5번째 반복counter2 synchronized 들어가기 전 모니터락 보유 여부: false
+counter2 synchronized 들어간 후 모니터락 보유 여부: true
+counter2 WAIT! 모니터락 보유 여부: true
+counter1 WAIT 풀림! 모니터락 보유 여부: true
+11:49:28.398 [ counter1] value: 5
+counter1 notifyAll() 후 모니터락 보유 여부: true
+counter2 WAIT 풀림! 모니터락 보유 여부: true
+11:49:28.398 [ counter2] value: 5
+counter2 notifyAll() 후 모니터락 보유 여부: true
+
+
+1. 이 실행에서는 우연히 counter2가 먼저 for 루프에 진입했고, 그 다음에 counter1이 진입 (실제로는 매 실행마다 순서가 달라질 수 있다.)
+
+1번째 반복counter2 synchronized 들어가기 전 모니터락 보유 여부: false
+1번째 반복counter1 synchronized 들어가기 전 모니터락 보유 여부: false
+
+
+2. counter2가 먼저 들어왔으니 TURN_LOCK 객체의 모니터락을 잡고 synchronized(){} 문 안으로 들어감
+
+counter2 synchronized 들어간 후 모니터락 보유 여부: true
+
+
+3.  counter2가 조건에 맞아 while문에 들어감 → wait 상태 들어감
+
+counter2 WAIT! 모니터락 보유 여부: true
+
+
+
+  wait()를 호출한 시점 이후의 코드는, 스레드가 다시 깨워져서 락을 재획득할 때까지 실행되지 않는다.
+
+
+4. counter1이 모니터 락을 잡아서 synchronized{} 문 안으로 들어감→ while 조건 해당을 만족하지 않으므로 진입하지 않음 → log 출력
+
+counter1 synchronized 들어간 후 모니터락 보유 여부: true
+11:49:28.376 [ counter1] value: 1
+
+
+
+5. log를 출력하고 잠들어 있는 스레드들을 깨움 (하지만 아직 락은 counter1이 가지고 있음)
+
+counter1 notifyAll() 후 모니터락 보유 여부: true
+
+
+6. counter1 이 첫 번째 반복문이 끝나고 두 번째 반복문을 돈다(모니터락 보유 여부 : false)
+
+2번째 반복counter1 synchronized 들어가기 전 모니터락 보유 여부: false
+
+
+7. counter2가 모니터 락을 잡아서 다시 wait() 뒤부터 시작 → while 문에서 탈출하여 log 출력( next 필드 값 변경했기 때문에 탈출)
+
+counter2 WAIT 풀림! 모니터락 보유 여부: true
+11:49:28.384 [ counter2] value: 1
+
+
+
+8. counter2이 첫 번째 반복문 끝나고 두 번째 반복문 돔(모니터락 보유 여부 : false)
+
+counter2 notifyAll() 후 모니터락 보유 여부: true
+2번째 반복counter2 synchronized 들어가기 전 모니터락 보유 여부: false
+
+
+
+  이때 wait() 중인 스레드가 없기 때문에, notifyAll() 호출은 실질적으로 깰 대상이 없다.
+  만약 counter1이 모니터락을 잡고 먼저 들어왔다면 while 문에서 wait() 상태로 있었을 것
+
+
+9. 다시 counter2가 모니터락 잡음 ( notifyAll()로 깨워도 잡기 위해서 경쟁해야함)
+
+counter2 synchronized 들어간 후 모니터락 보유 여부: true
+
+
+10. 다시 순서는 counter1부터 시작해야하므로 counter2는 wait 상태로 전환
+
+counter2 WAIT! 모니터락 보유 여부: true
+counter1 synchronized 들어간 후 모니터락 보유 여부: true
+
+
+11. 반복문이 끝날 때까지 위의 과정 반복
+
+주의사항
+
+1. if가 아닌 while 은 필수
+
+
+  
+    경쟁 상황(race)과 notifyAll()
+
+    notifyAll()은 여러 스레드를 동시에 깨운다. 깬 다음 락을 누가 먼저 잡느냐는 운이다. 내가 먼저 깼지만, 락을 잡았을 때는 이미 다른 스레드가 상태(next)를 바꿔서 내 차례가 아닐 수 있다. 그래서 깬 뒤에도 “정말 내 차례인가?”를 재확인해야 한다.
+  
+
+
+
+  모니터락 권한을 얻으면 얻은 스레드는 wait(); 이후 코드부터 실행
+  if문은 그전에 검사했기 때문에 바로 탈출
+  스레드가 여러 개 일 때 자신의 차례가 아니여도 뒤의 코드를 실행할 수 있음
+    
+      (자신의 차례가 맞는지 확인하기 위해서 while()로 조건 다시 검사하는 것
+    
+  
+
+
+2. notifyAll()은 모니터 락을 바로 부여하는 것이 아님
+
+
+  TURN_LOCK.notifyAll() 을 호출하면, WAIT 중이던 스레드들을 깨우기만 한다.
+  하지만 아직은 현재 스레드가 TURN_LOCK 을 가지고 있으므로, 깨어난 스레드들은 실행하지 못하고 “락을 달라”면서 대기 상태가 된다.
+  현재 스레드가 블록을 벗어나면서 TURN_LOCK 모니터 락을 놓는다.
+  그 순간, notifyAll() 으로 깨어나 대기 중이던 스레드 중 하나가 락을 얻어 실행을 재개한다.
+  락을 얻은 스레드의 재개 지점은 wait() 가 끝난 곳(즉, wait() 호출 바로 다음 줄) 부터이다.
+
+
+3. notifyAll()은 대기 큐에 있는 스레드들을 깨움
+
+
+  wait()를 호출한 스레드는 RUNNABLE 상태가 아니라, WAITING 상태로 바뀌어서 TURN_LOCK의 wait set(대기 집합, 큐) 에 들어가게 된다.
+  notifyAll() 은 이 wait set에 들어가 있는 모든 스레드를 깨우는 것이다.
+
+
+대기 큐는 어디 있나?
+
+
+  각 객체(TURN_LOCK 같은 Object)는 JVM 안에서 하나의 모니터를 갖는다.
+  이 모니터에는 크게 두 가지 내부 자료구조가 있다
+    
+      Entry Set: synchronized 블록 안에 들어가려고 락을 기다리는 스레드들의 집합 (항상 경쟁 상태)
+      Wait Set: 이미 락을 가지고 있는 스레드가 wait()를 호출하면서 자발적으로 락을 내려놓고 들어가는 대기 집합 (비활성 대기)
+    
+  
+  Entry Set은 락을 얻기 위해 경쟁하는 것이고 Wait Set은 경쟁하는 것이 아닌 락을 내려놓고 스스로 잠드는 상태
+    
+      Wait Set이 notifyAll() 을 통해서 깨어나야지 락을 얻기 위해 경쟁하는 것
+    
+  
+
+
+4. counter1이 synchronized 블록을 빠져나온 뒤, 다음 반복에서 락을 다시 먼저 획득 할 수도 있다.
+
+12:33:29.027 [ counter1] value: 3
+counter1 notifyAll() 후 모니터락 보유 여부: true
+4번째 반복counter1 synchronized 들어가기 전 모니터락 보유 여부: false
+counter1 synchronized 들어간 후 모니터락 보유 여부: true
+counter1 WAIT! 모니터락 보유 여부: true
+counter2 synchronized 들어간 후 모니터락 보유 여부: true
+12:33:29.028 [ counter2] value: 3
+
+
+
+  notifyAll()은 깨우기만 하고, 락 소유권을 특정 스레드에 양도하지 않는다.
+  “락은 synchronized 블록이 끝날 때 해제되고, 그 때 Entry Set + Wait Set에서 깨어난 스레드들이 다 같이 경쟁해서 한 스레드가 다시 얻는다.
+  위의 코드에서 처럼
+    
+      방금 블록을 빠져나온 counter1
+      wait() 에서 깨워져 경쟁에 합류한 counter2
+      경쟁해서 counter1 이 다시 들어갔다.
+    
+  
+
+
+코드가 안전하게 counter1 → counter2→counter1 → counter2 로 찍히는 이유
+
+
+  턴 스위치
+
+
+next = next.equals("counter1") ? "counter2" : "counter1";
+
+
+
+  가드 조건(반드시 while)
+
+
+while (!Thread.currentThread().getName().equals(next)) {
+    TURN_LOCK.wait();
+}
+
+
+                        </a>
+                        <div class="info-post">
+                                <a href="/Java" class="category">Java</a>
+                            
+                                <span class="date">· 2025-09-30</span>
+                            
+                        </div>
+                    </div>
+                </div>
+            </li>
+        
+        
+        <li class="paginated-item">
+                <div id="article_content">
+                    <div class="thumbnail_zone">
+                        
+                            <a href="/Java/thread-monitor-lock-1.html" class="thumbnail_post" loading="lazy" aria-label="thumbnail_post" style="background-image:url('') !important"></a>
+                        
+                    </div>
+                    <div class="box_contents">
+                        <a href="/Java/thread-monitor-lock-1.html"><h1 class="title_post">[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정</h1></a>
+                        <a href="/Java/thread-monitor-lock-1.html" class="txt_post">
+                            스레드가 스레드 객체의 모니터 락을 얻는 과정
+
+글을 읽기 전 알아야 할 개념
+
+1. 모니터 락(Monitor Lock):
+
+Java에서 synchronized() 키워드를 쓸 때 사용되는 잠금 메커니즘
+
+
+  자바의 모든 객체는 하나의 모니터(Monitor)를 가지고 있다.
+    
+      HotSpot JVM은 매 객체에 실물 ObjectMonitor를 항상 붙여두지 않고, 필요할 때(경합 발생 등) 만든다. “모니터를 가진다”는 개념/논리적인 표현이다.
+    
+  
+  이 모니터는 일종의 “잠금 장치”로, 여러 스레드가 동시에 객체에 접근할 때 한 번에 하나의 스레드만 들어올 수 있도록 관리한다.
+  Thread도 하나의 객체이므로 모니터 락을 가지고 있다.
+
+
+모니터 메타데이터에 들어있는 정보
+
+
+  현재 락을 소유한 스레드(Owner)
+  재진입 횟수(한 스레드가 몇 번 중첩해서 진입했는지)
+  대기 중인 스레드 목록
+
+
+ObjectMonitor 코드
+
+ObjectMonitor는 hotspot/src/share/vm/runtime/objectMonitor.hpp 파일에 정의되어 있습니다.
+
+// hotspot/src/share/vm/runtime/objectMonitor.hpp
+
+class ObjectMonitor {
+  // 필드들은 실제로는 private 이지만 설명을 위해 단순화
+  public:
+    // 1. 객체 헤더와의 연결
+    volatile markWord _header;       // 객체의 마크 워드(markWord)를 저장
+
+    // 2. 락 소유 정보
+    void* volatile _owner;           // 현재 락을 소유한 스레드의 포인터 (OSThread*)
+    volatile intptr_t  _recursions;  // 재진입 횟수. _owner 스레드가 락을 중첩해서 잡은 횟수
+
+    // 3. 스레드 대기 큐 (가장 중요)
+    ObjectWaiter* volatile _EntryList; // 락을 얻기 위해 대기하는 스레드 목록 (블록된 스레드)
+    ObjectWaiter* volatile _WaitSet;   // object.wait() 호출로 대기 중인 스레드 목록
+};
+
+// 스레드 대기 목록을 구성하는 노드
+class ObjectWaiter {
+  public:
+    ObjectWaiter* _next;   // 다음 대기자를 가리키는 포인터
+    ObjectWaiter* _prev;   // 이전 대기자를 가리키는 포인터
+    Thread* _thread; // 대기 중인 스레드
+    // ...
+};
+
+
+2. Thread 객체 vs 실행 단위 관계
+
+
+  Thread 객체는 자바 코드 안에서 스레드를 제어하는 껍데기(핸들)이다.
+  실행 단위는 실제로 CPU에서 동작하는 작업(명령어) 흐름이다. 운영체제 스레드(플랫폼 스레드)거나, JVM이 관리하는 가상 스레드일 수 있다.
+  
+    JVM이 둘을 연결시켜 줘야 동작할 수 있다.
+
+    실행 단위(실행 흐름)는 CPU에서 명령어가 순차적으로 실행되는 “흐름”일 뿐이다.
+자체로는 상태를 기억하거나 이름이 붙어 있지 않고, 단지 코드를 실행하는 역할만 한다.
+개발자는 그 흐름을 중단, 재개, 이름 확인, 상태 확인 같은 제어를 하고 싶기 때문에 객체(Thread)를 만들어서 그 실행 흐름을 가리키는 핸들 역할을 시키는 것이다.
+  
+  한 실행 단위 스레드가 만들어질 때, 무조건 대응되는 Thread 객체가 하나 생긴다.
+  즉. 1 실행 단위 ⇒ 1 Thread 객체 매핑
+  단, Thread 객체 생성(new)만으로는 실행 단위가 생기지 않는다. 반드시 start()가 호출되어야 JVM이 실행 단위를 붙여준다.
+
+
+new로 Thread 객체를 생성한 시점에는 객체(껍데기)만 존재한다.
+
+start() 가 호출되면 실행 흐름이 생성되고 객체와 1:1로 연결된다.
+
+스레드가 종료되면 실행 흐름은 사라지고, 객체는 상태(Terminated 등)와 식별 정보를 간직하게 된다.
+
+3. synchronized(this)
+
+자바에서 동기화 블록을 만들 때 쓰는 키워드
+
+
+  모니터 락(monitor lock)을 얻어서 동시에 단 하나의 스레드만 코드 블록에 들어오게 보장하는 장치
+  synchronized(this)라고 했을 때, 락은 현재 인스턴스의 모니터에 걸린다.
+  락은 특정 객체 단위로 존재한다. synchronized(obj)라고 쓰면, 스레드가  obj(여기서는 Thread 객체)에 달린 모니터를 얻어야만 블록 안으로 들어올 수 있다.
+
+
+Thread.start() 코드
+
+//Thread.start() 내부 코드
+public void start() {  
+		synchronized (this) {
+		    // zero status corresponds to state "NEW"   
+		    if (holder.threadStatus != 0)        
+		        throw new IllegalThreadStateException();   
+        start0();             
+    }
+}
+
+// ※ JDK 버전에 따라 구현은 조금씩 다르다.
+
+
+스레드가 스레드 객체의 모니터 락을 얻는 과정
+
+
+  스레드가 synchronized(obj) 블록에 들어가려면, JVM은 내부적으로 obj(여기서는 Thread 객체) 의 모니터 락이 비어 있는지 확인한다.
+  비어 있으면 현재 스레드가 락을 차지하고 블록 안으로 들어간다.
+  이미 다른 스레드가 소유 중이면, 대기 상태에 들어가고 락이 해제될 때까지 기다린다.
+  락 소유 정보는 Thread 인스턴스 안에 기록되는 것이 아닌, JVM 내부 모니터 구조체(ObjectMonitor)에 기록된다.
+  그 구조체에 “현재 이 모니터(Thread 객체 내 모니터)를 소유한 스레드 ID”가 저장된다.
+
+
+synchronized(this) 블록: 오직 한 명만 들어갈 수 있는 ‘특별한 방’
+
+Thread 객체 (this): 그 방에 들어갈 수 있는 ‘단 하나의 열쇠(모니터 락)’를 가지고 있는 주체. 이 열쇠는 객체가 생성될 때부터 부여된다.
+
+Thread 실행 흐름: 그 방에 들어가서 일을 해야 하는 ‘일꾼’
+
+Thread 객체의 락이 필요한 이유
+
+
+  Thread.start() 는 동일한 스레드 객체에 대해 여러 번 start() 를 호출하면 안 된다는 제약이 있다.
+
+
+Thread t = new Thread(...);
+t.start();
+t.start(); // IllegalThreadStateException 발생해야 함
+
+
+
+  이런 상황을 막으려면, 여러 스레드가 동시에 같은 Thread 객체의 start()를 호출할 수 없도록 락을 걸어야 한다.
+
+
+주의사항
+
+락이 Thread 객체 자체에 걸린다?
+
+
+  synchronized(this)라고 했을 때, 락은 그 Thread 객체의 모니터에 걸린다. 이는 ‘객체 전체 접근 금지’ 가 아니라 ‘그 모니터를 기준으로 한 임계 구역 보호’만 의미한다.
+  그래서 이 코드 블록에 들어가려면 obj의 모니터 락을 먼저 획득해야 한다는 조건이 생기는 것이다.
+  실제로 막히는 건 synchronized(this) 블록 안의 코드 실행이다.
+  락이 걸려 있어도 다른 스레드가 obj.toString(), obj.hashCode() 같은 동기화되지 않은 메서드를 호출하거나, obj를 일반 변수로 읽어오는 건 가능하다.
+  단지 synchronized(obj) 로 보호된 임계 구역에는 동시에 두 개 이상의 스레드가 못 들어올 뿐이다.
+
+
+락 소유 정보는 객체가 가지고 있나?
+
+
+  락 소유 정보는 JVM 내부의 ObjectMonitor 구조체에 기록된다.
+
+
+                        </a>
+                        <div class="info-post">
+                                <a href="/Java" class="category">Java</a>
+                            
+                                <span class="date">· 2025-09-26</span>
+                            
+                        </div>
+                    </div>
+                </div>
+            </li>
+        
+        
         
         </ul>
-    
-        <div class="no-posts">
-            <img src="/assets/img/sorry.png" loading="lazy">
-            <h1>Sorry, No posts found</h1>
-        </div>
     
 </div>
 <div class="pagination">

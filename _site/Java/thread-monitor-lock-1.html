@@ -7,25 +7,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>
     
-        카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우
+        [Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정
     
 </title>
 <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우 | Gimin’s Blog</title>
+<title>[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정 | Gimin’s Blog</title>
 <meta name="generator" content="Jekyll v4.4.1">
-<meta property="og:title" content="카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우">
+<meta property="og:title" content="[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정">
 <meta property="og:locale" content="en_US">
-<meta name="description" content="카카오 로그인 동작과정 분석하기(sdk 방식)">
-<meta property="og:description" content="카카오 로그인 동작과정 분석하기(sdk 방식)">
-<link rel="canonical" href="http://localhost:4000/Spring%20Boot/Security/2025-11-30-kakao-login.html">
-<meta property="og:url" content="http://localhost:4000/Spring%20Boot/Security/2025-11-30-kakao-login.html">
+<meta name="description" content="스레드가 스레드 객체의 모니터 락을 얻는 과정">
+<meta property="og:description" content="스레드가 스레드 객체의 모니터 락을 얻는 과정">
+<link rel="canonical" href="http://localhost:4000/Java/thread-monitor-lock-1.html">
+<meta property="og:url" content="http://localhost:4000/Java/thread-monitor-lock-1.html">
 <meta property="og:site_name" content="Gimin’s Blog">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2025-11-30T20:30:00+09:00">
+<meta property="article:published_time" content="2025-09-26T20:13:00+09:00">
 <meta name="twitter:card" content="summary">
-<meta property="twitter:title" content="카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우">
+<meta property="twitter:title" content="[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-30T20:30:00+09:00","datePublished":"2025-11-30T20:30:00+09:00","description":"카카오 로그인 동작과정 분석하기(sdk 방식)","headline":"카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Spring%20Boot/Security/2025-11-30-kakao-login.html"},"url":"http://localhost:4000/Spring%20Boot/Security/2025-11-30-kakao-login.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-26T20:13:00+09:00","datePublished":"2025-09-26T20:13:00+09:00","description":"스레드가 스레드 객체의 모니터 락을 얻는 과정","headline":"[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Java/thread-monitor-lock-1.html"},"url":"http://localhost:4000/Java/thread-monitor-lock-1.html"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -89,7 +89,7 @@
             
                 <style>
                         .thumbnail {
-                            background-image: url("/assets/img/thumbnail/kakao-oauth-login.png");
+                            background-image: url("");
                         }
                     
                 </style>
@@ -275,13 +275,11 @@
     <p>
                 <a href="/">Home</a>
                 &gt;
-            <a href="/Spring%20Boot/">Spring Boot</a>
-                &gt;
-            <a href="/Spring%20Boot/Security/">Security</a>
+            <a href="/Java/">Java</a>
                 &gt;
             
                 
-                    카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우
+                    [Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정
                 
             </p>
 </div>
@@ -290,19 +288,19 @@
     <div class="thumbnail">
         <div class="transbox">
             
-                <span class="post-title">카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우</span>
+                <span class="post-title">[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정</span>
             
             <div class="post-info">
                 
-                    <a class="info-box category-box" href="/Spring%20Boot">
+                    <span class="info-box">
                         <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 576 512"><path d="M384 480h48c11.4 0 21.9-6 27.6-15.9l112-192c5.8-9.9 5.8-22.1 .1-32.1S555.5 224 544 224H144c-11.4 0-21.9 6-27.6 15.9L48 357.1V96c0-8.8 7.2-16 16-16H181.5c4.2 0 8.3 1.7 11.3 4.7l26.5 26.5c21 21 49.5 32.8 79.2 32.8H416c8.8 0 16 7.2 16 16v32h48V160c0-35.3-28.7-64-64-64H298.5c-17 0-33.3-6.7-45.3-18.7L226.7 50.7c-12-12-28.3-18.7-45.3-18.7H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H87.7 384z"></path></svg>
-                        <span>Spring Boot</span>
-                    </a>
+                        <span>None</span>
+                    </span>
                 
                 <span class="info-box">
                     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z"></path></svg>
                     <span>
-                            2025-11-30
+                            2025-09-26
                         
                     </span>
                 </span>
@@ -316,472 +314,176 @@
     </div>
 </div>
 <div class="tag-box">
-<span class="tag theme-0" contentid="OAuth2">
-            OAuth2
-        </span><span class="tag theme-1" contentid="Spring Security">
-            Spring Security
-        </span><span class="tag theme-2" contentid="Kakao Login">
-            Kakao Login
+<span class="tag theme-0" contentid="java">
+            java
+        </span><span class="tag theme-1" contentid="Concurrency">
+            Concurrency
+        </span><span class="tag theme-2" contentid="monitor lock">
+            monitor lock
+        </span><span class="tag theme-0" contentid="thread">
+            thread
+        </span><span class="tag theme-1" contentid="synchronized">
+            synchronized
         </span>
 </div>
 <main>
-    <h1 id="카카오-로그인-동작과정-분석하기sdk-방식">카카오 로그인 동작과정 분석하기(sdk 방식)</h1>
+    <h1 id="스레드가-스레드-객체의-모니터-락을-얻는-과정">스레드가 스레드 객체의 모니터 락을 얻는 과정</h1>
 
-<h3 id="전제-조건-및-설계-원칙">[전제 조건 및 설계 원칙]</h3>
+<h1 id="글을-읽기-전-알아야-할-개념">글을 읽기 전 알아야 할 개념</h1>
+
+<h2 id="1-모니터-락monitor-lock">1. 모니터 락(Monitor Lock):</h2>
+
+<p>Java에서 synchronized() 키워드를 쓸 때 사용되는 잠금 메커니즘</p>
 
 <ul>
-  <li>
-<strong>환경 전제</strong>
+  <li>자바의 모든 객체는 하나의 모니터(Monitor)를 가지고 있다.
     <ul>
-      <li>웹 브라우저 기준으로 설명한다.</li>
-      <li>
-        <p>모바일 앱이라면 <code class="language-plaintext highlighter-rouge">authorize()</code> 호출 시 <strong>카카오톡 앱이 먼저 실행</strong>되고,</p>
-
-        <p>그 안의 WebView에서 <code class="language-plaintext highlighter-rouge">kauth.kakao.com</code> 페이지를 띄워 로그인/동의가 진행된다.</p>
-      </li>
+      <li>HotSpot JVM은 매 객체에 실물 <code class="language-plaintext highlighter-rouge">ObjectMonitor</code>를 항상 붙여두지 않고, 필요할 때(경합 발생 등) 만든다. “모니터를 가진다”는 개념/논리적인 표현이다.</li>
     </ul>
   </li>
-  <li>
-<strong>로그인 시작 방식</strong>
-    <ul>
-      <li>
-        <p>로그인 버튼 클릭 시, 프론트에서 <strong>백엔드를 거치지 않고</strong> 바로</p>
-
-        <p><code class="language-plaintext highlighter-rouge">Kakao.Auth.authorize()</code> 를 호출한다.</p>
-      </li>
-      <li>
-        <p>이 호출은 브라우저를 <strong><code class="language-plaintext highlighter-rouge">https://kauth.kakao.com/oauth/authorize</code> 로 이동</strong>시킨다.</p>
-
-        <p>→ 프론트 → (백엔드 패스) → Kakao Auth Server</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-<strong>인가 코드 수신 주체</strong>
-    <ul>
-      <li>
-<code class="language-plaintext highlighter-rouge">redirect_uri</code> 를 <strong>프론트 주소</strong>로 설정한다.</li>
-      <li>
-        <p>동의 완료 후, Kakao Auth Server는</p>
-
-        <p><code class="language-plaintext highlighter-rouge">302 Location: {redirect_uri}?code=...</code> 로 응답한다.</p>
-      </li>
-      <li>브라우저가 이 <code class="language-plaintext highlighter-rouge">redirect_uri</code>(프론트 URL)로 이동하면서 <strong>인가 코드는 먼저 프론트가 받는다.</strong>
-</li>
-      <li>프론트는 URL에서 <code class="language-plaintext highlighter-rouge">code</code>를 추출해 <strong>백엔드 로그인 API로 전달</strong>하여 토큰 발급·회원 처리 등을 진행한다.</li>
-    </ul>
-  </li>
+  <li>이 모니터는 일종의 “잠금 장치”로, 여러 스레드가 동시에 객체에 접근할 때 한 번에 하나의 스레드만 들어올 수 있도록 관리한다.</li>
+  <li>Thread도 하나의 객체이므로 모니터 락을 가지고 있다.</li>
 </ul>
 
-<h1 id="전체-아키텍처">전체 아키텍처</h1>
+<h3 id="모니터-메타데이터에-들어있는-정보">모니터 메타데이터에 들어있는 정보</h3>
 
-<p><img width="1207" height="914" alt="image" src="https://github.com/user-attachments/assets/ca4cec7f-5487-4636-9b6a-0d561a87a15e" loading="lazy"></p>
+<ul>
+  <li>현재 락을 소유한 스레드(Owner)</li>
+  <li>재진입 횟수(한 스레드가 몇 번 중첩해서 진입했는지)</li>
+  <li>대기 중인 스레드 목록</li>
+</ul>
 
-<h1 id="1-사용자가-로그인-버튼-클릭-프론트--kakao-auth-서버">1. 사용자가 로그인 버튼 클릭: 프론트 → Kakao Auth 서버</h1>
+<h1 id="objectmonitor-코드">ObjectMonitor 코드</h1>
 
-<p>사용자가 우리 사이트에서 “카카오로 로그인” 버튼을 누른다.</p>
+<p><code class="language-plaintext highlighter-rouge">ObjectMonitor</code>는 <code class="language-plaintext highlighter-rouge">hotspot/src/share/vm/runtime/objectMonitor.hpp</code> 파일에 정의되어 있습니다.</p>
 
-<p>JS SDK 방식에서는 이 버튼 클릭이 결국 카카오 JS SDK의 <code class="language-plaintext highlighter-rouge">authorize</code> 호출로 이어지고,</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// hotspot/src/share/vm/runtime/objectMonitor.hpp</span>
 
-<p>이 함수는 브라우저의 주소를 카카오 Auth 서버의 인가 엔드포인트로 바꾸어 버린다.</p>
+<span class="k">class</span> <span class="nc">ObjectMonitor</span> <span class="p">{</span>
+  <span class="c1">// 필드들은 실제로는 private 이지만 설명을 위해 단순화</span>
+  <span class="nl">public:</span>
+    <span class="c1">// 1. 객체 헤더와의 연결</span>
+    <span class="k">volatile</span> <span class="n">markWord</span> <span class="n">_header</span><span class="p">;</span>       <span class="c1">// 객체의 마크 워드(markWord)를 저장</span>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Kakao.Auth.authorize<span class="o">({</span>
-	redirectUri: <span class="s1">'http://localhost:5173/oauth/kakao/callback'</span>
-<span class="o">})</span><span class="p">;</span>
+    <span class="c1">// 2. 락 소유 정보</span>
+    <span class="kt">void</span><span class="o">*</span> <span class="k">volatile</span> <span class="n">_owner</span><span class="p">;</span>           <span class="c1">// 현재 락을 소유한 스레드의 포인터 (OSThread*)</span>
+    <span class="k">volatile</span> <span class="kt">intptr_t</span>  <span class="n">_recursions</span><span class="p">;</span>  <span class="c1">// 재진입 횟수. _owner 스레드가 락을 중첩해서 잡은 횟수</span>
+
+    <span class="c1">// 3. 스레드 대기 큐 (가장 중요)</span>
+    <span class="n">ObjectWaiter</span><span class="o">*</span> <span class="k">volatile</span> <span class="n">_EntryList</span><span class="p">;</span> <span class="c1">// 락을 얻기 위해 대기하는 스레드 목록 (블록된 스레드)</span>
+    <span class="n">ObjectWaiter</span><span class="o">*</span> <span class="k">volatile</span> <span class="n">_WaitSet</span><span class="p">;</span>   <span class="c1">// object.wait() 호출로 대기 중인 스레드 목록</span>
+<span class="p">};</span>
+
+<span class="c1">// 스레드 대기 목록을 구성하는 노드</span>
+<span class="k">class</span> <span class="nc">ObjectWaiter</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">ObjectWaiter</span><span class="o">*</span> <span class="n">_next</span><span class="p">;</span>   <span class="c1">// 다음 대기자를 가리키는 포인터</span>
+    <span class="n">ObjectWaiter</span><span class="o">*</span> <span class="n">_prev</span><span class="p">;</span>   <span class="c1">// 이전 대기자를 가리키는 포인터</span>
+    <span class="n">Thread</span><span class="o">*</span> <span class="kr">_thread</span><span class="p">;</span> <span class="c1">// 대기 중인 스레드</span>
+    <span class="c1">// ...</span>
+<span class="p">};</span>
 </code></pre></div></div>
 
-<p>결국 이 호출은 다음과 같이 나가게 된다.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://kauth.kakao.com/oauth/authorize?
-	<span class="nv">client_id</span><span class="o">=</span>
-	&amp;redirect_uri<span class="o">=</span>http://localhost:5173/oauth/kakao/callback
-	&amp;response_type<span class="o">=</span>code 
-</code></pre></div></div>
-
-<p>여기서 중요한 점은:</p>
+<h2 id="2-thread-객체-vs-실행-단위-관계">2. Thread 객체 vs 실행 단위 관계</h2>
 
 <ul>
-  <li>이 시점에는 <strong>우리 백엔드를 전혀 거치지 않는다</strong>는 것.</li>
-  <li>브라우저는 곧바로 kauth.kakao.com으로 이동해서 카카오 Auth 서버와 통신한다는 것.</li>
+  <li>Thread 객체는 자바 코드 안에서 스레드를 제어하는 껍데기(핸들)이다.</li>
+  <li>
+<strong>실행 단위</strong>는 실제로 CPU에서 동작하는 작업(명령어) 흐름이다. 운영체제 스레드(플랫폼 스레드)거나, JVM이 관리하는 가상 스레드일 수 있다.</li>
+  <li>
+    <p>JVM이 둘을 연결시켜 줘야 동작할 수 있다.</p>
+
+    <p>실행 단위(실행 흐름)는 CPU에서 명령어가 순차적으로 실행되는 “흐름”일 뿐이다.<br>
+자체로는 상태를 기억하거나 이름이 붙어 있지 않고, 단지 코드를 실행하는 역할만 한다.<br>
+개발자는 그 흐름을 중단, 재개, 이름 확인, 상태 확인 같은 제어를 하고 싶기 때문에 객체(Thread)를 만들어서 그 실행 흐름을 가리키는 핸들 역할을 시키는 것이다.</p>
+  </li>
+  <li>한 실행 단위 스레드가 만들어질 때, 무조건 대응되는 Thread 객체가 하나 생긴다.</li>
+  <li>즉. 1 실행 단위 ⇒ 1 Thread 객체 매핑</li>
+  <li>단, <strong>Thread 객체 생성(new)</strong>만으로는 실행 단위가 생기지 않는다. 반드시 <code class="language-plaintext highlighter-rouge">start()</code>가 호출되어야 JVM이 실행 단위를 붙여준다.</li>
 </ul>
 
-<p>로그인 시작부터 브라우저 ↔ 카카오 Auth 서버가 직접 붙는 구조다.</p>
+<p><code class="language-plaintext highlighter-rouge">new</code>로 Thread 객체를 생성한 시점에는 객체(껍데기)만 존재한다.</p>
 
-<h1 id="1-1-로그인-안-되어-있을-때--auth--account--auth-왕복">1-1. 로그인 안 되어 있을 때 : Auth → Account → Auth 왕복</h1>
+<p><code class="language-plaintext highlighter-rouge">start()</code> 가 호출되면 실행 흐름이 생성되고 객체와 1:1로 연결된다.</p>
 
-<p><img width="1160" height="744" alt="image" src="https://github.com/user-attachments/assets/d198ba61-759c-4f15-965b-962ebe4851b1" loading="lazy"></p>
+<p>스레드가 종료되면 실행 흐름은 사라지고, 객체는 상태(<code class="language-plaintext highlighter-rouge">Terminated</code> 등)와 식별 정보를 간직하게 된다.</p>
 
-<p>카카오 Auth 서버 입장에서, 브라우저가 보낸 인가 코드 요청을 받았다.</p>
+<h2 id="3-synchronizedthis">3. synchronized(this)</h2>
 
-<ol>
-  <li>Auth 서버는 이 브라우저에 <strong>카카오 계정 로그인 세션이 있는지</strong> 확인한다.</li>
-  <li>로그인 세션이 없다면, “먼저 카카오 계정 로그인을 시켜야 한다”고 판단한다.</li>
-  <li>
-    <p>그래서 Auth 서버는 브라우저에게 “카카오 Account 서버로 가라”는 의미의 302 리다이렉트 응답을 보낸다.</p>
-
-    <p>이때 응답의 Location 헤더에는 Account 서버의 로그인 URL과 함께 <code class="language-plaintext highlighter-rouge">continue</code>라는 파라미터가 붙어 있다.</p>
-  </li>
-</ol>
+<p>자바에서 동기화 블록을 만들 때 쓰는 키워드</p>
 
 <ul>
+  <li>모니터 락(monitor lock)을 얻어서 동시에 단 하나의 스레드만 코드 블록에 들어오게 보장하는 장치</li>
   <li>
-<code class="language-plaintext highlighter-rouge">continue</code> 파라미터</li>
+<code class="language-plaintext highlighter-rouge">synchronized(this)</code>라고 했을 때, 락은 <strong>현재 인스턴스의 모니터</strong>에 걸린다.</li>
+  <li>락은 특정 객체 단위로 존재한다. <code class="language-plaintext highlighter-rouge">synchronized(obj)</code>라고 쓰면, 스레드가  <code class="language-plaintext highlighter-rouge">obj(여기서는 Thread 객체)</code>에 달린 모니터를 얻어야만 블록 안으로 들어올 수 있다.</li>
 </ul>
 
-<blockquote>
-  <p>로그인까지 끝난 뒤 다시 돌아와야 할 Auth 서버의 /oauth/authorize 요청 전체를 그대로 기억해 두는 것</p>
-
-</blockquote>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://accounts.kakao.com/login?
-<span class="k">continue</span><span class="o">=</span>https%3A%2F%2Fkauth.kakao.com%2Foauth%2Fauthorize%3Fclient_id%3Dd2ffdfaa297012904086e71f5d7eda1f%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A3000%252Foauth%252Fkakao%252Fcallback%26response_type%3Dcode%26through_account%3Dtrue%26auth_tran_id%3DwbrMy9IcVMYhPjgkbCpf7-TiGF7balKdB--tpTWfCg0VmwAAAZrDiMg9#login
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">continue=</code> 뒤에 있는 건 전부 URL 인코딩된 문자열이다.</p>
-
-<ul>
-  <li>
-    <p>URL 디코더를 통해서 위의 인코딩된 문자열 디코딩 결과</p>
-
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code>  https://accounts.kakao.com/login?
-  <span class="k">continue</span><span class="o">=</span>https://kauth.kakao.com/oauth/authorize?
-  <span class="nv">client_id</span><span class="o">={</span>client_id<span class="o">}</span>&amp;
-  <span class="nv">redirect_uri</span><span class="o">=</span>http://localhost:5173/oauth/kakao/callback&amp;
-  <span class="nv">response_type</span><span class="o">=</span>code&amp;
-  <span class="nv">through_account</span><span class="o">=</span><span class="nb">true</span>&amp;
-  <span class="nv">auth_tran_id</span><span class="o">=</span>wbrMy9IcVMYhPjgkbCpf7-TiGF7balKdB--tpTWfCg0VmwAAAZrDiMg9#login
-</code></pre></div>    </div>
-
-    <ul>
-      <li>continue=</li>
-    </ul>
-
-    <p>→ 우리가 원래 쳤던 인가 코드 받는 엔드포인트</p>
-
-    <ul>
-      <li>client_id=…</li>
-    </ul>
-
-    <p>→  JS SDK 플로우에서는 JavaScript 키가 client_id로 사용된다.</p>
-
-    <ul>
-      <li>redirect_uri</li>
-    </ul>
-
-    <p>→ 동의 후 인가 코드를 보내줄 프론트 주소(백으로 설정하면 백주소)</p>
-
-    <ul>
-      <li>response_type = code</li>
-    </ul>
-
-    <p>→ OAuth2에서 인가 코드 플로우를 쓰겠다는 뜻</p>
-
-    <ul>
-      <li>through_account = true</li>
-    </ul>
-
-    <p>→ 계정 로그인 서버를 통해서 처리하는 중이다 정도의 카카오 내부 플래그</p>
-
-    <ul>
-      <li>auth_tran_id=</li>
-    </ul>
-
-    <p>→ 카카오가 이 인증 트랜잭션을 추적하기 위한 내부 트랜잭션 ID</p>
-  </li>
-</ul>
-
-<p>브라우저는 Auth 서버가 보내준 Location 값을 그대로 따라가서 Account 서버의 로그인 페이지를 연다.</p>
-
-<p><img width="880" height="1018" alt="image 1" src="https://github.com/user-attachments/assets/f6e94d68-2c9e-4ac7-ac65-f7a3433acb15" loading="lazy"></p>
-
-<p>이제 사용자는 이 페이지에서 카카오 계정 이메일과 비밀번호를 입력하고 로그인 버튼을 누른다.</p>
-
-<p>로그인이 성공하면 Account 서버는 <code class="language-plaintext highlighter-rouge">continue</code>에 들어 있던 인가 요청 URL을 꺼내서,</p>
-
-<p>다시 그 URL로 302 리다이렉트를 보낸다.</p>
-
-<p>브라우저는 또 한 번 302 Location을 따라가서 다시 Auth 서버의 <code class="language-plaintext highlighter-rouge">/oauth/authorize</code> 로 돌아간다.</p>
-
-<h3 id="로그인-버튼-누른-뒤에-일어나는-일">로그인 버튼 누른 뒤에 일어나는 일</h3>
-
-<ol>
-  <li>사용자는 여기서 아이디 비밀번호를 누르고 로그인 버튼을 누른다.</li>
-  <li>
-    <p>로그인 버튼을 누르면 이 폼을 Account 서버로 제출한다.</p>
-
-    <p>→ 예: POST <a href="https://accounts.kakao.com/login">https://accounts.kakao.com/login</a> 같은 요청</p>
-  </li>
-  <li>
-    <p>Account 서버가 ID/비번 검증해서 로그인 성공 처리하고 내부에서 continue 파라미터에 있던 값을 꺼내서 응답으로 돌려준다.</p>
-
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code> HTTP/1.1 302 Found
- Location: https://kauth.kakao.com/oauth/authorize?client_id<span class="o">=</span>...&amp;redirect_uri<span class="o">=</span>...&amp;response_type<span class="o">=</span>code&amp;...
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>브라우저는 이 Location 헤더를 보고</p>
-
-    <p>→ 자동으로 <br>
-  <code class="language-plaintext highlighter-rouge">GET https://kauth.kakao.com/oauth/authorize?...</code> 요청을 다시 보냄</p>
-
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code> https://kauth.kakao.com/oauth/authorize?
- <span class="nv">client_id</span><span class="o">={</span>client_id<span class="o">}</span>&amp;
- <span class="nv">redirect_uri</span><span class="o">=</span>http://localhost:5173/oauth/kakao/callback&amp;
- <span class="nv">response_type</span><span class="o">=</span>code
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<p>브라우저가 302 응답을 받자마자 순식간에 다음 주소로 이동하기 때문에 육안으로는 볼 수 없다.</p>
-
-<ul>
-  <li>확인 방법
-    <ol>
-      <li>F12를 눌러 개발자 도구를 연다.</li>
-      <li>상단 탭 중 Network 탭을 클릭한다.</li>
-      <li>Network 탭 상단 메뉴바에 있는 <strong><code class="language-plaintext highlighter-rouge">Preserve log</code> (로그 보존)</strong> 체크박스를 <strong>반드시</strong> 체크한다.
-        <ul>
-          <li>이걸 체크하지 않으면, 페이지가 <code class="language-plaintext highlighter-rouge">accounts</code>에서 <code class="language-plaintext highlighter-rouge">kauth</code>로 이동(리다이렉트)하는 순간 이전 기록이 전부 지워져서 302 응답을 볼 수 없다.</li>
-        </ul>
-      </li>
-      <li>이제 브라우저에서 로그인 버튼을 눌러 로그인을 시도한다.</li>
-      <li>Network 탭의 리스트 중에서 <strong><code class="language-plaintext highlighter-rouge">login</code></strong> 혹은 <strong><code class="language-plaintext highlighter-rouge">authorize</code></strong> 라는 이름의 요청을 찾는다.</li>
-      <li>Status(상태) 코드가 <strong><code class="language-plaintext highlighter-rouge">302</code></strong> 인 항목을 클릭한다.</li>
-      <li>오른쪽 상세 창의 <strong>Response Headers(응답 헤더)</strong> 탭을 보면 <strong><code class="language-plaintext highlighter-rouge">Location</code></strong> 항목에 네가 찾던 그 URL(<code class="language-plaintext highlighter-rouge">https://kauth.kakao.com/...</code>)이 적혀 있는 것을 확인할 수 있다.</li>
-    </ol>
-  </li>
-</ul>
-
-<h1 id="2-동의-화면-auth-서버가-html을-내려주고-브라우저가-렌더링한다">2. 동의 화면: Auth 서버가 HTML을 내려주고, 브라우저가 렌더링한다.</h1>
-
-<p>현재 상태</p>
-
-<ul>
-  <li>브라우저는 카카오 계정에 로그인된 상태다.</li>
-  <li>Auth 서버는 인가 코드 요청을 정상적으로 받을 수 있는 상태다.</li>
-</ul>
-
-<p>Auth 서버는 이 요청에 대해 다음과 같이 행동한다.</p>
-
-<ul>
-  <li>
-    <p>사용자가 이 앱(우리 서비스)에 <strong>처음 접근</strong>했다면</p>
-
-    <p>→ 어떤 정보(프로필, 이메일 등)를 제공할지 보여주는 <strong>동의 화면</strong>을 내려준다.</p>
-  </li>
-  <li>
-    <p>이미 예전에 한 번 동의한 앱이라면</p>
-
-    <p>→ 동의 화면을 생략하고 바로 인가 코드 발급으로 넘어갈 수 있다.</p>
-  </li>
-</ul>
-
-<p>여기서 중요한 점:</p>
-
-<ul>
-  <li>동의 화면은 <strong>항상 웹 페이지</strong>다.</li>
-  <li>서버는 Auth 서버(kauth)에서 HTML을 내려주고,</li>
-  <li>
-<strong>클라이언트가 브라우저라면 브라우저가,<br>
-카카오톡 앱이라면 카카오톡 앱 안의 WebView가 그 HTML을 렌더링</strong>할 뿐이다.</li>
-</ul>
-
-<p>웹 기준에서는 그냥 <strong>브라우저에서 카카오 동의 화면 페이지를 보는 것</strong>이라고 이해하면 된다.</p>
-
-<hr>
-
-<h1 id="3-동의하고-계속하기">3. 동의하고 계속하기</h1>
-
-<p>사용자가 동의 화면에서 <strong>“동의하고 계속하기”</strong> 버튼을 누른다.</p>
-
-<ul>
-  <li>브라우저는 이 버튼을 누르면서 Auth 서버로 폼 제출/JS 요청을 보내고,</li>
-  <li>Auth 서버는 내부적으로 인가 코드(<code class="language-plaintext highlighter-rouge">code</code>)를 하나 발급한 뒤,</li>
-  <li>아래와 같이 응답한다.</li>
-</ul>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 302 Found
-Location: {redirect_uri}?code=AUTH_CODE&amp;state=STATE_VALUE
-
-</code></pre></div></div>
-
-<p>중요한 점:</p>
-
-<ol>
-  <li>
-<strong><code class="language-plaintext highlighter-rouge">redirect_uri</code>는 우리가 처음 <code class="language-plaintext highlighter-rouge">/oauth/authorize</code> 요청에 넘겨줬던 값</strong>이다.</li>
-  <li>
-    <p>Auth 서버는 이 값을 그대로 끌고 와서 뒤에 <code class="language-plaintext highlighter-rouge">?code=...&amp;state=...</code> 를 붙인 뒤</p>
-
-    <p><strong>Location 헤더에 넣는다</strong>.</p>
-  </li>
-  <li>브라우저는 “redirect_uri”라는 개념을 모른다.
-    <ul>
-      <li>302의 Location에 해당하는 URL로 이동할 뿐이다.</li>
-    </ul>
-  </li>
-</ol>
-
-<hr>
-
-<h1 id="4-redirect_uri가-프론트-일-때">4. redirect_uri가 프론트 일 때</h1>
-
-<p>우리는 전제로 <code class="language-plaintext highlighter-rouge">redirect_uri</code>를 프론트 주소로 놓았다.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redirect_uri = http://localhost:5173/oauth/kakao/callback
-</code></pre></div></div>
-
-<p>그럼 Auth 서버의 응답은 대략 이렇게 된다.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 302 Found
-Location: http://localhost:5173/oauth/kakao/callback?code=AUTH_CODE&amp;state=...
-</code></pre></div></div>
-
-<p>브라우저는 이걸 보고:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET http://localhost:5173/oauth/kakao/callback?code=AUTH_CODE&amp;state=...
-</code></pre></div></div>
-
-<p>를 다시 호출한다.</p>
-
-<p>이 시점에 일어나는 일:</p>
-
-<ul>
-  <li>
-<strong>이 URL에 매핑된 프론트 라우트(React/Vite)</strong> 가 로드된다.</li>
-</ul>
-
-<p>이렇게 하면 인가 코드는 백엔드가 직접 받는 것이 아니라, 브라우저(프론트)가 URL로 전달받고 → 백엔드로 다시 넘기는 구조가 된다.</p>
-
-<hr>
-
-<h1 id="5-백엔드-인가-코드--액세스-토큰-교환">5. 백엔드: 인가 코드 → 액세스 토큰 교환</h1>
-
-<p><img width="631" height="164" alt="image" src="https://github.com/user-attachments/assets/fd6f5121-c6fa-4d5b-8ed6-9ed807e73cb6" loading="lazy"></p>
-
-<p>프론트에서 <code class="language-plaintext highlighter-rouge">/api/auth/kakao/login</code> 으로 <code class="language-plaintext highlighter-rouge">code</code>를 넘기면,</p>
-
-<p>이제부터는 <strong>백엔드(Spring)</strong> 의 역할이다.</p>
-
-<ol>
-  <li>
-    <p>카카오 Auth 서버의 <code class="language-plaintext highlighter-rouge">/oauth/token</code> 엔드포인트를 호출한다.</p>
-
-    <div class="language-plaintext highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code> POST https://kauth.kakao.com/oauth/token
- Content-Type: application/x-www-form-urlencoded
-    
- grant_type=authorization_code
- &amp;client_id=REST_API_KEY
- &amp;redirect_uri=http://localhost:5173/oauth/kakao/callback
- &amp;code=AUTH_CODE
-    
-</code></pre></div>    </div>
-
-    <p>여기서 중요한 점:</p>
-
-    <ul>
-      <li>이때 <code class="language-plaintext highlighter-rouge">client_id</code>로 사용하는 것은 <strong>REST API 키</strong>다.</li>
-      <li>프론트(Javascript SDK)에서는 <strong>JavaScript 키</strong>를 사용한다.</li>
-      <li>REST API 키는 <strong>백엔드에서만 사용해야 하는 비공개 키</strong>다.</li>
-    </ul>
-  </li>
-  <li>
-    <p>응답으로 액세스 토큰/리프레시 토큰을 받는다.</p>
-  </li>
-</ol>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
-<span class="s2">"token_type"</span>: <span class="s2">"bearer"</span>,
-<span class="s2">"access_token"</span>: <span class="s2">"ACCESS_TOKEN"</span>,
-<span class="s2">"expires_in"</span>: 21599,
-<span class="s2">"refresh_token"</span>: <span class="s2">"REFRESH_TOKEN"</span>,
-<span class="s2">"refresh_token_expires_in"</span>: 5183999,
-<span class="s2">"scope"</span>: <span class="s2">"profile_nickname account_email"</span>
+<h1 id="threadstart-코드">Thread.start() 코드</h1>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//Thread.start() 내부 코드</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>  
+		<span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+		    <span class="c1">// zero status corresponds to state "NEW"   </span>
+		    <span class="k">if</span> <span class="o">(</span><span class="n">holder</span><span class="o">.</span><span class="na">threadStatus</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span>        
+		        <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalThreadStateException</span><span class="o">();</span>   
+        <span class="n">start0</span><span class="o">();</span>             
+    <span class="o">}</span>
 <span class="o">}</span>
+
+<span class="c1">// ※ JDK 버전에 따라 구현은 조금씩 다르다.</span>
 </code></pre></div></div>
 
-<hr>
+<h1 id="스레드가-스레드-객체의-모니터-락을-얻는-과정-1">스레드가 스레드 객체의 모니터 락을 얻는 과정</h1>
 
-<h1 id="6-백엔드-kakao-api-server에서-유저-정보-조회">6. 백엔드: Kakao API Server에서 유저 정보 조회</h1>
+<ul>
+  <li>스레드가 synchronized(obj) 블록에 들어가려면, JVM은 내부적으로 <code class="language-plaintext highlighter-rouge">obj(여기서는 Thread 객체)</code> 의 모니터 락이 비어 있는지 확인한다.</li>
+  <li>비어 있으면 현재 스레드가 락을 차지하고 블록 안으로 들어간다.</li>
+  <li>이미 다른 스레드가 소유 중이면, 대기 상태에 들어가고 락이 해제될 때까지 기다린다.</li>
+  <li>락 소유 정보는 Thread 인스턴스 안에 기록되는 것이 아닌, JVM 내부 모니터 구조체(ObjectMonitor)에 기록된다.</li>
+  <li>그 구조체에 “현재 이 <code class="language-plaintext highlighter-rouge">모니터(Thread 객체 내 모니터)</code>를 소유한 스레드 ID”가 저장된다.</li>
+</ul>
 
-<p><img width="656" height="128" alt="image" src="https://github.com/user-attachments/assets/9fbeb5ca-c284-427b-948f-42ea07571fc2" loading="lazy"></p>
+<p><strong><code class="language-plaintext highlighter-rouge">synchronized(this)</code> 블록</strong>: 오직 한 명만 들어갈 수 있는 <strong>‘특별한 방’</strong></p>
 
-<p>이제 백엔드는 받은 <code class="language-plaintext highlighter-rouge">access_token</code>을 이용해</p>
+<p><strong><code class="language-plaintext highlighter-rouge">Thread</code> 객체 (<code class="language-plaintext highlighter-rouge">this</code>)</strong>: 그 방에 들어갈 수 있는 <strong>‘단 하나의 열쇠(모니터 락)’를 가지고 있는 주체</strong>. 이 열쇠는 객체가 생성될 때부터 부여된다.</p>
 
-<p>Kakao API Server (<code class="language-plaintext highlighter-rouge">kapi.kakao.com</code>) 에서 유저 정보를 조회한다.</p>
+<p><strong><code class="language-plaintext highlighter-rouge">Thread</code> 실행 흐름</strong>: 그 방에 들어가서 일을 해야 하는 <strong>‘일꾼’</strong></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://kapi.kakao.com/v2/user/me
-Authorization: Bearer ACCESS_TOKEN
-Content-Type: application/x-www-form-urlencoded;charset=utf-8
-
-</code></pre></div></div>
-
-<p>응답 예시는 대략 이런 형태다.</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1234567890</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"kakao_account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"profile"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"홍길동"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"profile_image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example@kakao.com"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"has_email"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"is_email_valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"is_email_verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-
-</span></code></pre></div></div>
-
-<p>이 정보를 기반으로 우리 도메인에서:</p>
+<h1 id="thread-객체의-락이-필요한-이유">Thread 객체의 락이 필요한 이유</h1>
 
 <ul>
   <li>
-<code class="language-plaintext highlighter-rouge">SocialAccount</code> 엔티티 (provider=KAKAO, social_user_id=카카오 id) 생성/조회</li>
-  <li>
-<code class="language-plaintext highlighter-rouge">Member</code> 엔티티와 1:N 관계로 묶기</li>
-  <li>이메일/전화번호로 기존 회원과 연결 여부 판단</li>
-  <li>신규 가입이면 Member 생성, 기존 회원이면 해당 Member에 소셜 계정 추가</li>
+<code class="language-plaintext highlighter-rouge">Thread.start()</code> 는 동일한 스레드 객체에 대해 여러 번 <code class="language-plaintext highlighter-rouge">start()</code> 를 호출하면 안 된다는 제약이 있다.</li>
 </ul>
 
-<p>같은 작업을 수행하면 된다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Thread</span><span class="o">(...);</span>
+<span class="n">t</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+<span class="n">t</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <span class="c1">// IllegalThreadStateException 발생해야 함</span>
+</code></pre></div></div>
 
-<hr>
+<ul>
+  <li>이런 상황을 막으려면, 여러 스레드가 동시에 같은 <code class="language-plaintext highlighter-rouge">Thread</code> 객체의 <code class="language-plaintext highlighter-rouge">start()</code>를 호출할 수 없도록 락을 걸어야 한다.</li>
+</ul>
 
-<h1 id="7-우리-서비스-토큰-발급-및-최종응답">7. 우리 서비스 토큰 발급 및 최종응답</h1>
+<h1 id="주의사항">주의사항</h1>
 
-<p><img width="257" height="115" alt="image" src="https://github.com/user-attachments/assets/fb292a87-6315-4a93-9c30-58d45cfca7fe" loading="lazy"></p>
+<h2 id="락이-thread-객체-자체에-걸린다">락이 Thread 객체 자체에 걸린다?</h2>
 
-<p>마지막으로, 우리 서비스 자체의 로그인 처리를 한다.</p>
-
-<ol>
+<ul>
   <li>
-<code class="language-plaintext highlighter-rouge">Member</code> / <code class="language-plaintext highlighter-rouge">SocialAccount</code> 기준으로 실제 사용자 식별</li>
-  <li>우리 서비스용 <strong>JWT Access Token / Refresh Token</strong> 발급</li>
-  <li>프론트로 응답</li>
-</ol>
+<code class="language-plaintext highlighter-rouge">synchronized(this)</code>라고 했을 때, 락은 <strong>그 Thread 객체의 모니터</strong>에 걸린다. 이는 ‘객체 전체 접근 금지’ 가 아니라 ‘그 모니터를 기준으로 한 임계 구역 보호’만 의미한다.</li>
+  <li>그래서 이 코드 블록에 들어가려면 obj의 모니터 락을 먼저 획득해야 한다는 조건이 생기는 것이다.</li>
+  <li>실제로 막히는 건 <code class="language-plaintext highlighter-rouge">synchronized(this)</code> 블록 <strong>안의 코드 실행</strong>이다.</li>
+  <li>락이 걸려 있어도 다른 스레드가 <code class="language-plaintext highlighter-rouge">obj.toString(), obj.hashCode()</code> 같은 동기화되지 않은 메서드를 호출하거나, obj를 일반 변수로 읽어오는 건 가능하다.</li>
+  <li>단지 <code class="language-plaintext highlighter-rouge">synchronized(obj)</code> 로 보호된 임계 구역에는 동시에 두 개 이상의 스레드가 못 들어올 뿐이다.</li>
+</ul>
 
-<p>예:</p>
+<h2 id="락-소유-정보는-객체가-가지고-있나">락 소유 정보는 객체가 가지고 있나?</h2>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"accessToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OUR_SERVICE_ACCESS_TOKEN"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"refreshToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OUR_SERVICE_REFRESH_TOKEN"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"member"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"김기민"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARENT"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-
-</span></code></pre></div></div>
-
-<p>이제 사용자는 “카카오 계정으로 로그인한 우리 서비스 사용자”가 된다.</p>
-
-<hr>
+<ul>
+  <li>락 소유 정보는 JVM 내부의 <code class="language-plaintext highlighter-rouge">ObjectMonitor</code> 구조체에 기록된다.</li>
+</ul>
 
     <!-- see https://giscus.app/ -->
     <div class="giscus" id="giscus" style="margin: 4rem auto;"></div>
