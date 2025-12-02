@@ -370,10 +370,7 @@ JavaThread::JavaThread(ThreadFunction entry_point, size_t stack_sz, MemTag mem_t
 - pending exception이 없으면 `entry_point(this, this)` 호출
 - 일반 자바 스레드의 경우 `entry_point == thread_entry`
 
-즉,
-
-> 여기서 드디어 thread_entry(JavaThread*, TRAPS)가 호출된다.
->
+> 즉, 여기서 드디어 thread_entry(JavaThread*, TRAPS)가 호출된다.
 
 ---
 
@@ -431,9 +428,7 @@ t.start();
     - `thread.getState()`를 호출하면 `TERMINATED`를 반환한다.
     - 따라서 `join()` 같은 메서드에서 “이 스레드가 끝났는지” 여부를 확인할 수 있다.
 
-그래서:
-
-> 실행 단위(실제 OS 스레드)는 사라져도, 자바의 Thread 인스턴스라는 “껍데기”는 남아서 상태를 알려주는 역할을 한다.
+> 그래서, 실행 단위(실제 OS 스레드)는 사라져도, 자바의 Thread 인스턴스라는 “껍데기”는 남아서 상태를 알려주는 역할을 한다.
 >
 
 ---
@@ -450,11 +445,8 @@ t.start();
     - `os::create_thread` → `pthread_create` → `clone()`으로 OS 스레드 생성
     - 새 OS 스레드에서 `thread_native_entry` → `JavaThread::run` → `thread_entry` → `Thread.run()`이 호출된다.
 
-따라서:
-
-> start()는 “새로운 실행 흐름(새 OS 스레드) + 그 안에서 run() 실행”을 의미하고,
->
->
+> 따라서, start()는 “새로운 실행 흐름(새 OS 스레드) + 그 안에서 run() 실행”을 의미하고,
+> 
 > `run()` 직접 호출은 “지금 스레드에서 메서드 한 번 호출”을 의미한다.
 >
 
