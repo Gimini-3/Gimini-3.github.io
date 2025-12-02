@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-12-01T23:50:05+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Gimin’s Blog</title><subtitle>시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.</subtitle><entry><title type="html">GitHub Pages 이미지 올리는 법</title><link href="http://localhost:4000/upload/images/2025/11/26/images.html" rel="alternate" type="text/html" title="GitHub Pages 이미지 올리는 법" /><published>2025-11-26T21:06:00+09:00</published><updated>2025-11-26T21:06:00+09:00</updated><id>http://localhost:4000/upload/images/2025/11/26/images</id><content type="html" xml:base="http://localhost:4000/upload/images/2025/11/26/images.html"><![CDATA[<p>GitHub 블로그(Jekyll)에 이미지를 넣는 가장 정석적인 방법이다.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-12-02T15:30:30+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Gimin’s Blog</title><subtitle>시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.</subtitle><entry><title type="html">GitHub Pages 이미지 올리는 법</title><link href="http://localhost:4000/upload/images/2025/11/26/images.html" rel="alternate" type="text/html" title="GitHub Pages 이미지 올리는 법" /><published>2025-11-26T21:06:00+09:00</published><updated>2025-11-26T21:06:00+09:00</updated><id>http://localhost:4000/upload/images/2025/11/26/images</id><content type="html" xml:base="http://localhost:4000/upload/images/2025/11/26/images.html"><![CDATA[<p>GitHub 블로그(Jekyll)에 이미지를 넣는 가장 정석적인 방법이다.</p>
 
 <p>핵심은 <strong>“이미지를 저장할 폴더를 만들고, 그 경로를 마크다운에 적는 것”</strong>이다.</p>
 
@@ -94,7 +94,8 @@ Jekyll 빌드/배포 시 이미지를 제대로 찾지 못할 수 있다.</p>
 <pre><code class="language-Markdown">::contentReference[oaicite:0]{index=0}
 </code></pre>]]></content><author><name></name></author><category term="upload" /><category term="images" /><summary type="html"><![CDATA[GitHub 블로그(Jekyll)에 이미지를 넣는 가장 정석적인 방법이다.]]></summary></entry><entry><title type="html">GitHub Pages 필수 규칙들</title><link href="http://localhost:4000/blog/start/2025/11/26/rule.html" rel="alternate" type="text/html" title="GitHub Pages 필수 규칙들" /><published>2025-11-26T21:05:00+09:00</published><updated>2025-11-26T21:05:00+09:00</updated><id>http://localhost:4000/blog/start/2025/11/26/rule</id><content type="html" xml:base="http://localhost:4000/blog/start/2025/11/26/rule.html"><![CDATA[<p>오늘은 GitHub Pages를 이용해서 기술 블로그를 만들었다.</p>
 
-<p>GitHub Pages(Jekyll 엔진)가 인식하는 필수 규칙들을 정리한다.</p>
+<p>GitHub Pages(Jekyll 엔진)가 인식하는 필수 규칙들을 정리한다.<br />
+서버 실행 : bundle exec jekyll serve</p>
 
 <h2 id="1-글-파일-이름-규칙-엄격함">1. 글 파일 이름 규칙 (엄격함)</h2>
 <p>_posts 폴더 안의 파일은 반드시 아래 형식을 따라야 한다.</p>

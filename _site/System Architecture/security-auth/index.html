@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>
     
-        Trouble Shooting
+        security-auth
     
 </title>
 <!-- Begin Jekyll SEO tag v2.8.0 -->
@@ -17,15 +17,15 @@
 <meta property="og:locale" content="en_US">
 <meta name="description" content="시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.">
 <meta property="og:description" content="시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.">
-<link rel="canonical" href="http://localhost:4000/Trouble%20Shooting/">
-<meta property="og:url" content="http://localhost:4000/Trouble%20Shooting/">
+<link rel="canonical" href="http://localhost:4000/System%20Architecture/security-auth/">
+<meta property="og:url" content="http://localhost:4000/System%20Architecture/security-auth/">
 <meta property="og:site_name" content="Gimin’s Blog">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="1900-01-01T00:02:36+08:27">
 <meta name="twitter:card" content="summary">
 <meta property="twitter:title" content="Index">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"1900-01-01T00:02:36+08:27","datePublished":"1900-01-01T00:02:36+08:27","description":"시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.","headline":"Index","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Trouble%20Shooting/"},"url":"http://localhost:4000/Trouble%20Shooting/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"1900-01-01T00:02:36+08:27","datePublished":"1900-01-01T00:02:36+08:27","description":"시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.","headline":"Index","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/System%20Architecture/security-auth/"},"url":"http://localhost:4000/System%20Architecture/security-auth/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -307,9 +307,11 @@
     <p>
                 <a href="/">Home</a>
                 &gt;
+            <a href="/System%20Architecture/">System Architecture</a>
+                &gt;
             
                 
-                    Trouble Shooting
+                    security-auth
                 
             </p>
 </div>
@@ -322,18 +324,477 @@
 </div>
                     <h1 class="category-header">
     
-        Trouble Shooting
+        security-auth
     
 </h1>
 <div id="category-list">
     <ul class="paginated-list" data-current-page="1" aria-live="polite">
+        <li class="paginated-item">
+                <div id="article_content">
+                    <div class="thumbnail_zone">
+                        
+                            <a href="/System%20Architecture/security-auth/2025-11-30-kakao-login.html" class="thumbnail_post" loading="lazy" aria-label="thumbnail_post" style="background-image:url('/assets/img/thumbnail/kakao-oauth-login.png') !important"></a>
+                        
+                    </div>
+                    <div class="box_contents">
+                        <a href="/System%20Architecture/security-auth/2025-11-30-kakao-login.html"><h1 class="title_post">카카오 OAuth 로그인 흐름 이해하기: JS SDK + Authorization Code 플로우</h1></a>
+                        <a href="/System%20Architecture/security-auth/2025-11-30-kakao-login.html" class="txt_post">
+                            카카오 로그인 동작과정 분석하기(sdk 방식)
+
+[전제 조건 및 설계 원칙]
+
+
+  환경 전제
+    
+      웹 브라우저 기준으로 설명한다.
+      
+        모바일 앱이라면 authorize() 호출 시 카카오톡 앱이 먼저 실행되고,
+
+        그 안의 WebView에서 kauth.kakao.com 페이지를 띄워 로그인/동의가 진행된다.
+      
+    
+  
+  로그인 시작 방식
+    
+      
+        로그인 버튼 클릭 시, 프론트에서 백엔드를 거치지 않고 바로
+
+        Kakao.Auth.authorize() 를 호출한다.
+      
+      
+        이 호출은 브라우저를 https://kauth.kakao.com/oauth/authorize 로 이동시킨다.
+
+        → 프론트 → (백엔드 패스) → Kakao Auth Server
+      
+    
+  
+  인가 코드 수신 주체
+    
+      redirect_uri 를 프론트 주소로 설정한다.
+      
+        동의 완료 후, Kakao Auth Server는
+
+        302 Location: {redirect_uri}?code=... 로 응답한다.
+      
+      브라우저가 이 redirect_uri(프론트 URL)로 이동하면서 인가 코드는 먼저 프론트가 받는다.
+      프론트는 URL에서 code를 추출해 백엔드 로그인 API로 전달하여 토큰 발급·회원 처리 등을 진행한다.
+    
+  
+
+
+전체 아키텍처
+
+
+
+1. 사용자가 로그인 버튼 클릭: 프론트 → Kakao Auth 서버
+
+사용자가 우리 사이트에서 “카카오로 로그인” 버튼을 누른다.
+
+JS SDK 방식에서는 이 버튼 클릭이 결국 카카오 JS SDK의 authorize 호출로 이어지고,
+
+이 함수는 브라우저의 주소를 카카오 Auth 서버의 인가 엔드포인트로 바꾸어 버린다.
+
+Kakao.Auth.authorize({
+	redirectUri: 'http://localhost:5173/oauth/kakao/callback'
+});
+
+
+결국 이 호출은 다음과 같이 나가게 된다.
+
+https://kauth.kakao.com/oauth/authorize?
+	client_id=
+	&amp;redirect_uri=http://localhost:5173/oauth/kakao/callback
+	&amp;response_type=code 
+
+
+여기서 중요한 점은:
+
+
+  이 시점에는 우리 백엔드를 전혀 거치지 않는다는 것.
+  브라우저는 곧바로 kauth.kakao.com으로 이동해서 카카오 Auth 서버와 통신한다는 것.
+
+
+로그인 시작부터 브라우저 ↔ 카카오 Auth 서버가 직접 붙는 구조다.
+
+1-1. 로그인 안 되어 있을 때 : Auth → Account → Auth 왕복
+
+
+
+카카오 Auth 서버 입장에서, 브라우저가 보낸 인가 코드 요청을 받았다.
+
+
+  Auth 서버는 이 브라우저에 카카오 계정 로그인 세션이 있는지 확인한다.
+  로그인 세션이 없다면, “먼저 카카오 계정 로그인을 시켜야 한다”고 판단한다.
+  
+    그래서 Auth 서버는 브라우저에게 “카카오 Account 서버로 가라”는 의미의 302 리다이렉트 응답을 보낸다.
+
+    이때 응답의 Location 헤더에는 Account 서버의 로그인 URL과 함께 continue라는 파라미터가 붙어 있다.
+  
+
+
+
+  continue 파라미터
+
+
+
+  로그인까지 끝난 뒤 다시 돌아와야 할 Auth 서버의 /oauth/authorize 요청 전체를 그대로 기억해 두는 것
+
+
+
+https://accounts.kakao.com/login?
+continue=https%3A%2F%2Fkauth.kakao.com%2Foauth%2Fauthorize%3Fclient_id%3Dd2ffdfaa297012904086e71f5d7eda1f%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A3000%252Foauth%252Fkakao%252Fcallback%26response_type%3Dcode%26through_account%3Dtrue%26auth_tran_id%3DwbrMy9IcVMYhPjgkbCpf7-TiGF7balKdB--tpTWfCg0VmwAAAZrDiMg9#login
+
+
+continue= 뒤에 있는 건 전부 URL 인코딩된 문자열이다.
+
+
+  
+    URL 디코더를 통해서 위의 인코딩된 문자열 디코딩 결과
+
+      https://accounts.kakao.com/login?
+  continue=https://kauth.kakao.com/oauth/authorize?
+  client_id={client_id}&amp;
+  redirect_uri=http://localhost:5173/oauth/kakao/callback&amp;
+  response_type=code&amp;
+  through_account=true&amp;
+  auth_tran_id=wbrMy9IcVMYhPjgkbCpf7-TiGF7balKdB--tpTWfCg0VmwAAAZrDiMg9#login
+    
+
+    
+      continue=
+    
+
+    → 우리가 원래 쳤던 인가 코드 받는 엔드포인트
+
+    
+      client_id=…
+    
+
+    →  JS SDK 플로우에서는 JavaScript 키가 client_id로 사용된다.
+
+    
+      redirect_uri
+    
+
+    → 동의 후 인가 코드를 보내줄 프론트 주소(백으로 설정하면 백주소)
+
+    
+      response_type = code
+    
+
+    → OAuth2에서 인가 코드 플로우를 쓰겠다는 뜻
+
+    
+      through_account = true
+    
+
+    → 계정 로그인 서버를 통해서 처리하는 중이다 정도의 카카오 내부 플래그
+
+    
+      auth_tran_id=
+    
+
+    → 카카오가 이 인증 트랜잭션을 추적하기 위한 내부 트랜잭션 ID
+  
+
+
+브라우저는 Auth 서버가 보내준 Location 값을 그대로 따라가서 Account 서버의 로그인 페이지를 연다.
+
+
+
+이제 사용자는 이 페이지에서 카카오 계정 이메일과 비밀번호를 입력하고 로그인 버튼을 누른다.
+
+로그인이 성공하면 Account 서버는 continue에 들어 있던 인가 요청 URL을 꺼내서,
+
+다시 그 URL로 302 리다이렉트를 보낸다.
+
+브라우저는 또 한 번 302 Location을 따라가서 다시 Auth 서버의 /oauth/authorize 로 돌아간다.
+
+로그인 버튼 누른 뒤에 일어나는 일
+
+
+  사용자는 여기서 아이디 비밀번호를 누르고 로그인 버튼을 누른다.
+  
+    로그인 버튼을 누르면 이 폼을 Account 서버로 제출한다.
+
+    → 예: POST https://accounts.kakao.com/login 같은 요청
+  
+  
+    Account 서버가 ID/비번 검증해서 로그인 성공 처리하고 내부에서 continue 파라미터에 있던 값을 꺼내서 응답으로 돌려준다.
+
+     HTTP/1.1 302 Found
+ Location: https://kauth.kakao.com/oauth/authorize?client_id=...&amp;redirect_uri=...&amp;response_type=code&amp;...
+    
+  
+  
+    브라우저는 이 Location 헤더를 보고
+
+    → 자동으로 
+  GET https://kauth.kakao.com/oauth/authorize?... 요청을 다시 보냄
+
+     https://kauth.kakao.com/oauth/authorize?
+ client_id={client_id}&amp;
+ redirect_uri=http://localhost:5173/oauth/kakao/callback&amp;
+ response_type=code
+    
+  
+
+
+브라우저가 302 응답을 받자마자 순식간에 다음 주소로 이동하기 때문에 육안으로는 볼 수 없다.
+
+
+  확인 방법
+    
+      F12를 눌러 개발자 도구를 연다.
+      상단 탭 중 Network 탭을 클릭한다.
+      Network 탭 상단 메뉴바에 있는 Preserve log (로그 보존) 체크박스를 반드시 체크한다.
+        
+          이걸 체크하지 않으면, 페이지가 accounts에서 kauth로 이동(리다이렉트)하는 순간 이전 기록이 전부 지워져서 302 응답을 볼 수 없다.
+        
+      
+      이제 브라우저에서 로그인 버튼을 눌러 로그인을 시도한다.
+      Network 탭의 리스트 중에서 login 혹은 authorize 라는 이름의 요청을 찾는다.
+      Status(상태) 코드가 302 인 항목을 클릭한다.
+      오른쪽 상세 창의 Response Headers(응답 헤더) 탭을 보면 Location 항목에 네가 찾던 그 URL(https://kauth.kakao.com/...)이 적혀 있는 것을 확인할 수 있다.
+    
+  
+
+
+2. 동의 화면: Auth 서버가 HTML을 내려주고, 브라우저가 렌더링한다.
+
+현재 상태
+
+
+  브라우저는 카카오 계정에 로그인된 상태다.
+  Auth 서버는 인가 코드 요청을 정상적으로 받을 수 있는 상태다.
+
+
+Auth 서버는 이 요청에 대해 다음과 같이 행동한다.
+
+
+  
+    사용자가 이 앱(우리 서비스)에 처음 접근했다면
+
+    → 어떤 정보(프로필, 이메일 등)를 제공할지 보여주는 동의 화면을 내려준다.
+  
+  
+    이미 예전에 한 번 동의한 앱이라면
+
+    → 동의 화면을 생략하고 바로 인가 코드 발급으로 넘어갈 수 있다.
+  
+
+
+여기서 중요한 점:
+
+
+  동의 화면은 항상 웹 페이지다.
+  서버는 Auth 서버(kauth)에서 HTML을 내려주고,
+  클라이언트가 브라우저라면 브라우저가,
+카카오톡 앱이라면 카카오톡 앱 안의 WebView가 그 HTML을 렌더링할 뿐이다.
+
+
+웹 기준에서는 그냥 브라우저에서 카카오 동의 화면 페이지를 보는 것이라고 이해하면 된다.
+
+
+
+3. 동의하고 계속하기
+
+사용자가 동의 화면에서 “동의하고 계속하기” 버튼을 누른다.
+
+
+  브라우저는 이 버튼을 누르면서 Auth 서버로 폼 제출/JS 요청을 보내고,
+  Auth 서버는 내부적으로 인가 코드(code)를 하나 발급한 뒤,
+  아래와 같이 응답한다.
+
+
+HTTP/1.1 302 Found
+Location: {redirect_uri}?code=AUTH_CODE&amp;state=STATE_VALUE
+
+
+
+중요한 점:
+
+
+  redirect_uri는 우리가 처음 /oauth/authorize 요청에 넘겨줬던 값이다.
+  
+    Auth 서버는 이 값을 그대로 끌고 와서 뒤에 ?code=...&amp;state=... 를 붙인 뒤
+
+    Location 헤더에 넣는다.
+  
+  브라우저는 “redirect_uri”라는 개념을 모른다.
+    
+      302의 Location에 해당하는 URL로 이동할 뿐이다.
+    
+  
+
+
+
+
+4. redirect_uri가 프론트 일 때
+
+우리는 전제로 redirect_uri를 프론트 주소로 놓았다.
+
+redirect_uri = http://localhost:5173/oauth/kakao/callback
+
+
+그럼 Auth 서버의 응답은 대략 이렇게 된다.
+
+HTTP/1.1 302 Found
+Location: http://localhost:5173/oauth/kakao/callback?code=AUTH_CODE&amp;state=...
+
+
+브라우저는 이걸 보고:
+
+GET http://localhost:5173/oauth/kakao/callback?code=AUTH_CODE&amp;state=...
+
+
+를 다시 호출한다.
+
+이 시점에 일어나는 일:
+
+
+  이 URL에 매핑된 프론트 라우트(React/Vite) 가 로드된다.
+
+
+이렇게 하면 인가 코드는 백엔드가 직접 받는 것이 아니라, 브라우저(프론트)가 URL로 전달받고 → 백엔드로 다시 넘기는 구조가 된다.
+
+
+
+5. 백엔드: 인가 코드 → 액세스 토큰 교환
+
+
+
+프론트에서 /api/auth/kakao/login 으로 code를 넘기면,
+
+이제부터는 백엔드(Spring) 의 역할이다.
+
+
+  
+    카카오 Auth 서버의 /oauth/token 엔드포인트를 호출한다.
+
+     POST https://kauth.kakao.com/oauth/token
+ Content-Type: application/x-www-form-urlencoded
+    
+ grant_type=authorization_code
+ &amp;client_id=REST_API_KEY
+ &amp;redirect_uri=http://localhost:5173/oauth/kakao/callback
+ &amp;code=AUTH_CODE
+    
+    
+
+    여기서 중요한 점:
+
+    
+      이때 client_id로 사용하는 것은 REST API 키다.
+      프론트(Javascript SDK)에서는 JavaScript 키를 사용한다.
+      REST API 키는 백엔드에서만 사용해야 하는 비공개 키다.
+    
+  
+  
+    응답으로 액세스 토큰/리프레시 토큰을 받는다.
+  
+
+
+{
+"token_type": "bearer",
+"access_token": "ACCESS_TOKEN",
+"expires_in": 21599,
+"refresh_token": "REFRESH_TOKEN",
+"refresh_token_expires_in": 5183999,
+"scope": "profile_nickname account_email"
+}
+
+
+
+
+6. 백엔드: Kakao API Server에서 유저 정보 조회
+
+
+
+이제 백엔드는 받은 access_token을 이용해
+
+Kakao API Server (kapi.kakao.com) 에서 유저 정보를 조회한다.
+
+GET https://kapi.kakao.com/v2/user/me
+Authorization: Bearer ACCESS_TOKEN
+Content-Type: application/x-www-form-urlencoded;charset=utf-8
+
+
+
+응답 예시는 대략 이런 형태다.
+
+{
+  "id": 1234567890,
+  "kakao_account": {
+    "profile": {
+      "nickname": "홍길동",
+      "profile_image_url": "..."
+    },
+    "email": "example@kakao.com",
+    "has_email": true,
+    "is_email_valid": true,
+    "is_email_verified": true}
+}
+
+
+
+이 정보를 기반으로 우리 도메인에서:
+
+
+  SocialAccount 엔티티 (provider=KAKAO, social_user_id=카카오 id) 생성/조회
+  Member 엔티티와 1:N 관계로 묶기
+  이메일/전화번호로 기존 회원과 연결 여부 판단
+  신규 가입이면 Member 생성, 기존 회원이면 해당 Member에 소셜 계정 추가
+
+
+같은 작업을 수행하면 된다.
+
+
+
+7. 우리 서비스 토큰 발급 및 최종응답
+
+
+
+마지막으로, 우리 서비스 자체의 로그인 처리를 한다.
+
+
+  Member / SocialAccount 기준으로 실제 사용자 식별
+  우리 서비스용 JWT Access Token / Refresh Token 발급
+  프론트로 응답
+
+
+예:
+
+{
+  "accessToken": "OUR_SERVICE_ACCESS_TOKEN",
+  "refreshToken": "OUR_SERVICE_REFRESH_TOKEN",
+  "member": {
+    "id": 100,
+    "nickname": "김기민",
+    "role": "PARENT"
+  }
+}
+
+
+
+이제 사용자는 “카카오 계정으로 로그인한 우리 서비스 사용자”가 된다.
+
+
+
+                        </a>
+                        <div class="info-post">
+                                <a href="/System%20Architecture" class="category">System Architecture</a>
+                            
+                                <span class="date">· 2025-11-30</span>
+                            
+                        </div>
+                    </div>
+                </div>
+            </li>
+        
+        
         
         </ul>
-    
-        <div class="no-posts">
-            <img src="/assets/img/sorry.png" loading="lazy">
-            <h1>Sorry, No posts found</h1>
-        </div>
     
 </div>
 <div class="pagination">
