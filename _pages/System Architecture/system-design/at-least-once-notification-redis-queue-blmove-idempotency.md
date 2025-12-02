@@ -11,8 +11,6 @@ tags:
 thumbnail: "/assets/img/thumbnail/at-least-once-notification-redis-queue-blmove-idempotency.png"
 ---
 
-# 원코 스케줄러/레디스 큐 설계
-
 ## **1. 시스템 목표**
 
 - "하루에 한 번"과 같이 정해진 알림을 **누락 없이** 전송한다. (At-least-once Delivery)
@@ -21,7 +19,7 @@ thumbnail: "/assets/img/thumbnail/at-least-once-notification-redis-queue-blmove-
 
 ## 2. 아키텍처 설계
 
-![at-least-once-notification-redis-queue-blmove-idempotency.png](../../assets/img/thumbnail/at-least-once-notification-redis-queue-blmove-idempotency.png)
+![at-least-once-notification-redis-queue-blmove-idempotency.png](../../../assets/img/thumbnail/at-least-once-notification-redis-queue-blmove-idempotency.png)
 
 [1단계: 생산자 (Scheduler) 영역]
 
