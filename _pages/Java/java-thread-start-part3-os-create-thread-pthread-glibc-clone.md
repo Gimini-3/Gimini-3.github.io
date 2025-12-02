@@ -8,7 +8,7 @@ tags:
   - start
   - run
   - jvm
-thumbnail: ""
+thumbnail: "/assets/img/thumbnail/thread-start.png"
 ---
 # [Java Multithreading] Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
 

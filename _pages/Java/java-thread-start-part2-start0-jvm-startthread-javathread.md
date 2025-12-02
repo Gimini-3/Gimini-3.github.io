@@ -8,7 +8,7 @@ tags:
   - start
   - run
   - jvm
-thumbnail: ""
+thumbnail: "/assets/img/thumbnail/thread-start.png"
 ---
 # [Java Multithreading] Part 2 – Thread.start() 뒤에서 일어나는 일: registerNatives ~ JVM_StartThread ~ JavaThread
 

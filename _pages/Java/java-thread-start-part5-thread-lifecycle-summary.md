@@ -8,7 +8,7 @@ tags:
   - start
   - run
   - jvm
-thumbnail: ""
+thumbnail: "/assets/img/thumbnail/thread-start.png"
 ---
 # [Java Multithreading] 마지막 글 - 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
 

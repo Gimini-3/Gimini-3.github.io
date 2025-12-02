@@ -6,10 +6,10 @@ tags:
   - Concurrency
   - monitor lock
   - wait-notifyAll
-thumbnail: ""
+thumbnail: "/assets/img/thumbnail/monitor-lock-1.png"
 ---
 
-# 모니터락
+# [Java Concurrency] 모니터 락과 wait/notifyAll로 턴 스케줄러 구현하기
 
 ```java
 public class StartTest2_2Main {

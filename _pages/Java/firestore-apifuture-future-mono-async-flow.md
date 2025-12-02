@@ -11,10 +11,9 @@ tags:
   - mono
   - async
   - concurrency
-thumbnail: ""
+thumbnail: "/assets/img/thumbnail/firestore-apifuture-future-mono-async-flow.png"
 ---
-
-# ApiFuture
+# Firestore ApiFuture와 Java Future, 그리고 Reactor Mono까지 – 비동기 흐름 뜯어보기
 
 공모전에서 Firestore를 사용하면서 `ApiFuture`를 자연스럽게 쓰고 있었다.
 

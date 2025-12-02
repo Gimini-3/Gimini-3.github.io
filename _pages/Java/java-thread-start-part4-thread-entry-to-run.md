@@ -8,7 +8,7 @@ tags:
   - start
   - run
   - jvm
-thumbnail: ""
+thumbnail: "/assets/img/thumbnail/thread-start.png"
 ---
 
 

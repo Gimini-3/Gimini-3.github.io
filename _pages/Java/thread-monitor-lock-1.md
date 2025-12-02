@@ -7,10 +7,10 @@ tags:
   - monitor lock
   - thread
   - synchronized
-thumbnail: ""
+thumbnail: "/assets/img/thumbnail/thread-monitor-lock-1.png"
 ---
 
-# 스레드가 스레드 객체의 모니터 락을 얻는 과정
+# [Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정
 
 # 글을 읽기 전 알아야 할 개념
 

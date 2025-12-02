@@ -74,10 +74,10 @@
     font-weight:600;
     font-size:1rem;
     line-height:2rem;
-    word-break:normal;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    word-break:break-word;   // 긴 단어도 적당히 잘라서 줄바꿈
+    white-space:normal;      // ★ 여기! 줄바꿈 허용 (nowrap 지우기)
+    overflow:visible;        // ★ 잘라내지 않기
+    text-overflow:clip;      // ★ ellipsis 효과 제거
     text-align:left;
   }
   .title_post:hover,
@@ -93,10 +93,11 @@
     color:grey;
     overflow:hidden;
     text-overflow:ellipsis;
-    -webkit-line-clamp:2;
+    -webkit-line-clamp:1; // 보여줄 라인 수
     -webkit-box-orient:vertical;
     word-wrap:break-word;
   }
+
 }
 
 .no-posts {
@@ -148,7 +149,7 @@
 
   p { padding:1.5rem 0 1.5rem 2rem; }
 
-  svg { 
+  svg {
     top:28px;
     width:18px;
   }
@@ -158,7 +159,7 @@
   font-size:2.25rem;
   padding-bottom:8px;
   text-underline-offset:16px;
-  margin:0 2rem 3rem 2rem; 
+  margin:0 2rem 3rem 2rem;
 }
 
 .paginated-list { margin:auto 2rem; }
@@ -177,6 +178,7 @@
     box-shadow:0 15px 45px -10px rgba(10, 16, 34, .2);
   }
 
+  // 320 * 240
   .thumbnail_post {
     display:block;
     height:12.5rem;
@@ -226,7 +228,7 @@
   .thumbnail_post { height:15rem; }
 
   .box_contents {
-    margin-left:-6rem;
+    margin-left: 1rem;
     border-radius:8px;
   }
 
