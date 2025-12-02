@@ -15,8 +15,8 @@
 <meta name="generator" content="Jekyll v4.4.1">
 <meta property="og:title" content="[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계">
 <meta property="og:locale" content="en_US">
-<meta name="description" content="1. 시스템 목표">
-<meta property="og:description" content="1. 시스템 목표">
+<meta name="description" content="[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계">
+<meta property="og:description" content="[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계">
 <link rel="canonical" href="http://localhost:4000/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html">
 <meta property="og:url" content="http://localhost:4000/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html">
 <meta property="og:site_name" content="Gimin’s Blog">
@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary">
 <meta property="twitter:title" content="[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T23:32:00+09:00","datePublished":"2025-11-03T23:32:00+09:00","description":"1. 시스템 목표","headline":"[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html"},"url":"http://localhost:4000/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T23:32:00+09:00","datePublished":"2025-11-03T23:32:00+09:00","description":"[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계","headline":"[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html"},"url":"http://localhost:4000/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -386,7 +386,9 @@
         </span>
 </div>
 <main>
-    <h2 id="1-시스템-목표"><strong>1. 시스템 목표</strong></h2>
+    <h1 id="시스템-설계-하루-한-번-알림을-누락-없이-보내기-위한-redis-큐--워커-설계">[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계</h1>
+
+<h2 id="1-시스템-목표"><strong>1. 시스템 목표</strong></h2>
 
 <ul>
   <li>“하루에 한 번”과 같이 정해진 알림을 <strong>누락 없이</strong> 전송한다. (At-least-once Delivery)</li>

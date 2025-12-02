@@ -11,6 +11,15 @@ tags:
 thumbnail: "/assets/img/thumbnail/thread-start.png"
 ---
 
+### 시리즈 전체 보기
+
+- [Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교]({% link _pages/Java/java-thread-start-part1-start-vs-run-code-and-flow.md %})
+- [Part 2 – Thread.start() 뒤에서 일어나는 일: start0() ~ JVM_StartThread ~ JavaThread]({% link _pages/Java/java-thread-start-part2-start0-jvm-startthread-javathread.md %})
+- [Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()]({% link _pages/Java/java-thread-start-part3-os-create-thread-pthread-glibc-clone.md %})
+- [Part 4 – 새로운 스레드가 자바 run()에 도달하기까지:  thread_native_entry → JavaThread::run → thread_entry → Thread.run()]({% link _pages/Java/java-thread-start-part4-thread-entry-to-run.md %})
+- [마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태]({% link _pages/Java/java-thread-start-part5-thread-lifecycle-summary.md %})
+
+
 
 # [Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
 

@@ -797,7 +797,9 @@ Content-Type: application/x-www-form-urlencoded;charset=utf-8
                     <div class="box_contents">
                         <a href="/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html"><h1 class="title_post">[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계</h1></a>
                         <a href="/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html" class="txt_post">
-                            1. 시스템 목표
+                            [시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계
+
+1. 시스템 목표
 
 
   “하루에 한 번”과 같이 정해진 알림을 누락 없이 전송한다. (At-least-once Delivery)
@@ -1350,7 +1352,7 @@ PROCESSING 상태는 ‘보냈을 수도 있고 안 보냈을 수도 있는’ �
                     <div class="box_contents">
                         <a href="/Java/firestore-apifuture-future-mono-async-flow.html"><h1 class="title_post">[Firebase/Java] Firestore ApiFuture와 Java Future, 그리고 Reactor Mono까지 – 비동기 흐름 뜯어보기</h1></a>
                         <a href="/Java/firestore-apifuture-future-mono-async-flow.html" class="txt_post">
-                            ApiFuture
+                            Firestore ApiFuture와 Java Future, 그리고 Reactor Mono까지 – 비동기 흐름 뜯어보기
 
 공모전에서 Firestore를 사용하면서 ApiFuture를 자연스럽게 쓰고 있었다.
 
@@ -1811,6 +1813,16 @@ public Mono&lt;ConversationMessage&gt; createMessage(String question, String ans
                         <a href="/Java/java-thread-start-part5-thread-lifecycle-summary.html"><h1 class="title_post">[Java Multithreading] 마지막 글 - 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태</h1></a>
                         <a href="/Java/java-thread-start-part5-thread-lifecycle-summary.html" class="txt_post">
                             [Java Multithreading] 마지막 글 - 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
+
+시리즈 전체 보기
+
+
+  Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
+  Part 2 – Thread.start() 뒤에서 일어나는 일: start0() ~ JVM_StartThread ~ JavaThread
+  Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
+  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지:  thread_native_entry → JavaThread::run → thread_entry → Thread.run()
+  마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
+
 
 앞선 글에서:
 
@@ -2326,6 +2338,16 @@ run()이 끝나면:
                         <a href="/Java/java-thread-start-part4-thread-entry-to-run.html"><h1 class="title_post">[Java Multithreading] Part 4 – 새로운 스레드가 자바 run()에 도달하기까지: thread_native_entry → JavaThread::run → thread_entry → Thread.run()</h1></a>
                         <a href="/Java/java-thread-start-part4-thread-entry-to-run.html" class="txt_post">
                             [Java Multithreading] Part 4 – 새로운 스레드가 자바 run()에 도달하기까지: thread_native_entry → JavaThread::run → thread_entry → Thread.run()
+
+시리즈 전체 보기
+
+
+  Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
+  Part 2 – Thread.start() 뒤에서 일어나는 일: start0() ~ JVM_StartThread ~ JavaThread
+  Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
+  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지:  thread_native_entry → JavaThread::run → thread_entry → Thread.run()
+  마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
+
 
 0. 이번 파트에서 볼 것
 
@@ -3123,6 +3145,16 @@ c.  예외 처리
                         <a href="/Java/java-thread-start-part3-os-create-thread-pthread-glibc-clone.html"><h1 class="title_post">[Java Multithreading] Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()</h1></a>
                         <a href="/Java/java-thread-start-part3-os-create-thread-pthread-glibc-clone.html" class="txt_post">
                             [Java Multithreading] Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
+
+시리즈 전체 보기
+
+
+  Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
+  Part 2 – Thread.start() 뒤에서 일어나는 일: start0() ~ JVM_StartThread ~ JavaThread
+  Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
+  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지: thread_native_entry, JavaThread::run, thread_entry, Thread.run()
+  마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
+
 
 0. 이번 파트에서 보는 것
 
@@ -3965,6 +3997,16 @@ thread_native_entry → JavaThread::run → thread_entry → Thread.run() 으로
                         <a href="/Java/java-thread-start-part2-start0-jvm-startthread-javathread.html" class="txt_post">
                             [Java Multithreading] Part 2 – Thread.start() 뒤에서 일어나는 일: registerNatives ~ JVM_StartThread ~ JavaThread
 
+시리즈 전체 보기
+
+
+  Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
+  Part 2 – Thread.start() 뒤에서 일어나는 일: registerNatives ~ JVM_StartThread ~ JavaThread
+  Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
+  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지: thread_native_entry, JavaThread::run, thread_entry, Thread.run()
+  마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
+
+
 0. 이 글에서 다룰 범위
 
 Part 1에서 정리한 핵심은 딱 이거였다.
@@ -4776,7 +4818,17 @@ void os::pd_start_thread(Thread* thread) {
                     <div class="box_contents">
                         <a href="/Java/java-thread-start-part1-start-vs-run-code-and-flow.html"><h1 class="title_post">[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교</h1></a>
                         <a href="/Java/java-thread-start-part1-start-vs-run-code-and-flow.html" class="txt_post">
-                            [Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
+                            시리즈 전체 보기
+
+
+  Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
+  Part 2 – Thread.start() 뒤에서 일어나는 일: start0() ~ JVM_StartThread ~ JavaThread
+  Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
+  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지: thread_native_entry, JavaThread::run, thread_entry, Thread.run()
+  마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
+
+
+[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
 
 0. 왜 start() vs run()이 헷갈릴까?
 
@@ -5229,7 +5281,7 @@ Part 2에서는 지금 살짝 언급만 했던:
                     <div class="box_contents">
                         <a href="/Java/monitor-lock-1.html"><h1 class="title_post">[Java Concurrency] 모니터 락과 wait/notifyAll로 턴 스케줄러 구현하기</h1></a>
                         <a href="/Java/monitor-lock-1.html" class="txt_post">
-                            모니터락
+                            [Java Concurrency] 모니터 락과 wait/notifyAll로 턴 스케줄러 구현하기
 
 public class StartTest2_2Main {
 
@@ -5581,7 +5633,7 @@ while (!Thread.currentThread().getName().equals(next)) {
                     <div class="box_contents">
                         <a href="/Java/thread-monitor-lock-1.html"><h1 class="title_post">[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정</h1></a>
                         <a href="/Java/thread-monitor-lock-1.html" class="txt_post">
-                            스레드가 스레드 객체의 모니터 락을 얻는 과정
+                            [Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정
 
 글을 읽기 전 알아야 할 개념
 

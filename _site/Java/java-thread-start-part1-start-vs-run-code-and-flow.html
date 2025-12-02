@@ -15,8 +15,8 @@
 <meta name="generator" content="Jekyll v4.4.1">
 <meta property="og:title" content="[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교">
 <meta property="og:locale" content="en_US">
-<meta name="description" content="[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교">
-<meta property="og:description" content="[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교">
+<meta name="description" content="시리즈 전체 보기">
+<meta property="og:description" content="시리즈 전체 보기">
 <link rel="canonical" href="http://localhost:4000/Java/java-thread-start-part1-start-vs-run-code-and-flow.html">
 <meta property="og:url" content="http://localhost:4000/Java/java-thread-start-part1-start-vs-run-code-and-flow.html">
 <meta property="og:site_name" content="Gimin’s Blog">
@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary">
 <meta property="twitter:title" content="[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-10-02T15:14:00+09:00","datePublished":"2025-10-02T15:14:00+09:00","description":"[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교","headline":"[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Java/java-thread-start-part1-start-vs-run-code-and-flow.html"},"url":"http://localhost:4000/Java/java-thread-start-part1-start-vs-run-code-and-flow.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-10-02T15:14:00+09:00","datePublished":"2025-10-02T15:14:00+09:00","description":"시리즈 전체 보기","headline":"[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Java/java-thread-start-part1-start-vs-run-code-and-flow.html"},"url":"http://localhost:4000/Java/java-thread-start-part1-start-vs-run-code-and-flow.html"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -384,7 +384,17 @@
         </span>
 </div>
 <main>
-    <h1 id="java-multithreading-part-1--threadstart-vs-run--자바-코드--간단한-흐름-비교">[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교</h1>
+    <h3 id="시리즈-전체-보기">시리즈 전체 보기</h3>
+
+<ul>
+  <li><a href="/_pages/Java/java-thread-start-part1-start-vs-run-code-and-flow.md">Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교</a></li>
+  <li><a href="/_pages/Java/java-thread-start-part2-start0-jvm-startthread-javathread.md">Part 2 – Thread.start() 뒤에서 일어나는 일: start0() ~ JVM_StartThread ~ JavaThread</a></li>
+  <li><a href="/_pages/Java/java-thread-start-part3-os-create-thread-pthread-glibc-clone.md">Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()</a></li>
+  <li><a href="/_pages/Java/java-thread-start-part4-thread-entry-to-run.md">Part 4 – 새로운 스레드가 자바 run()에 도달하기까지: thread_native_entry, JavaThread::run, thread_entry, Thread.run()</a></li>
+  <li><a href="/_pages/Java/java-thread-start-part5-thread-lifecycle-summary.md">마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태</a></li>
+</ul>
+
+<h1 id="java-multithreading-part-1--threadstart-vs-run--자바-코드--간단한-흐름-비교">[Java Multithreading] Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교</h1>
 
 <h2 id="0-왜-start-vs-run이-헷갈릴까">0. 왜 <code class="language-plaintext highlighter-rouge">start()</code> vs <code class="language-plaintext highlighter-rouge">run()</code>이 헷갈릴까?</h2>
 

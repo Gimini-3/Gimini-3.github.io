@@ -15,8 +15,8 @@
 <meta name="generator" content="Jekyll v4.4.1">
 <meta property="og:title" content="[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정">
 <meta property="og:locale" content="en_US">
-<meta name="description" content="스레드가 스레드 객체의 모니터 락을 얻는 과정">
-<meta property="og:description" content="스레드가 스레드 객체의 모니터 락을 얻는 과정">
+<meta name="description" content="[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정">
+<meta property="og:description" content="[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정">
 <link rel="canonical" href="http://localhost:4000/Java/thread-monitor-lock-1.html">
 <meta property="og:url" content="http://localhost:4000/Java/thread-monitor-lock-1.html">
 <meta property="og:site_name" content="Gimin’s Blog">
@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary">
 <meta property="twitter:title" content="[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-26T20:13:00+09:00","datePublished":"2025-09-26T20:13:00+09:00","description":"스레드가 스레드 객체의 모니터 락을 얻는 과정","headline":"[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Java/thread-monitor-lock-1.html"},"url":"http://localhost:4000/Java/thread-monitor-lock-1.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-26T20:13:00+09:00","datePublished":"2025-09-26T20:13:00+09:00","description":"[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정","headline":"[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/Java/thread-monitor-lock-1.html"},"url":"http://localhost:4000/Java/thread-monitor-lock-1.html"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -382,7 +382,7 @@
         </span>
 </div>
 <main>
-    <h1 id="스레드가-스레드-객체의-모니터-락을-얻는-과정">스레드가 스레드 객체의 모니터 락을 얻는 과정</h1>
+    <h1 id="java-concurrency-threadstart와-thread-객체의-모니터-락-획득-과정">[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정</h1>
 
 <h1 id="글을-읽기-전-알아야-할-개념">글을 읽기 전 알아야 할 개념</h1>
 
@@ -489,7 +489,7 @@
 <span class="c1">// ※ JDK 버전에 따라 구현은 조금씩 다르다.</span>
 </code></pre></div></div>
 
-<h1 id="스레드가-스레드-객체의-모니터-락을-얻는-과정-1">스레드가 스레드 객체의 모니터 락을 얻는 과정</h1>
+<h1 id="스레드가-스레드-객체의-모니터-락을-얻는-과정">스레드가 스레드 객체의 모니터 락을 얻는 과정</h1>
 
 <ul>
   <li>스레드가 synchronized(obj) 블록에 들어가려면, JVM은 내부적으로 <code class="language-plaintext highlighter-rouge">obj(여기서는 Thread 객체)</code> 의 모니터 락이 비어 있는지 확인한다.</li>

@@ -706,7 +706,7 @@ input::-webkit-search-results-decoration {
   text-overflow: ellipsis;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
-  word-wrap: normal;
+  word-wrap: break-word;
 }
 
 .no-posts {
