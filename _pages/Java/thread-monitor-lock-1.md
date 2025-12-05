@@ -7,6 +7,7 @@ tags:
   - monitor lock
   - thread
   - synchronized
+  - multi thread
 thumbnail: "/assets/img/thumbnail/thread-monitor-lock-1.png"
 ---
 
