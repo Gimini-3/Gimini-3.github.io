@@ -156,6 +156,7 @@
             
             
             
+            
 
     
     
@@ -2137,7 +2138,7 @@ c.  예외 처리
   Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
   Part 2 – Thread.start() 뒤에서 일어나는 일: start0() ~ JVM_StartThread ~ JavaThread
   Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
-  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지: thread_native_entry, JavaThread::run, thread_entry, Thread.run()
+  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지:  thread_native_entry → JavaThread::run → thread_entry → Thread.run()
   마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
 
 
@@ -2986,9 +2987,9 @@ thread_native_entry → JavaThread::run → thread_entry → Thread.run() 으로
 
 
   Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
-  Part 2 – Thread.start() 뒤에서 일어나는 일: registerNatives ~ JVM_StartThread ~ JavaThread
+  Part 2 – Thread.start() 뒤에서 일어나는 일: start0() ~ JVM_StartThread ~ JavaThread
   Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
-  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지: thread_native_entry, JavaThread::run, thread_entry, Thread.run()
+  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지:  thread_native_entry → JavaThread::run → thread_entry → Thread.run()
   마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
 
 
@@ -3809,7 +3810,7 @@ void os::pd_start_thread(Thread* thread) {
   Part 1 – Thread.start() vs run() : 자바 코드 + 간단한 흐름 비교
   Part 2 – Thread.start() 뒤에서 일어나는 일: start0() ~ JVM_StartThread ~ JavaThread
   Part 3 – JVM이 OS 스레드를 만드는 과정: JavaThread, os::create_thread, pthread_create, glibc, clone()
-  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지: thread_native_entry, JavaThread::run, thread_entry, Thread.run()
+  Part 4 – 새로운 스레드가 자바 run()에 도달하기까지:  thread_native_entry → JavaThread::run → thread_entry → Thread.run()
   마지막 글 – 스레드 관점에서 한눈에 정리: new → start → run → 종료 후 상태
 
 
@@ -4954,7 +4955,7 @@ t.start(); // IllegalThreadStateException 발생해야 함
             'title'    : "[Java Concurrency] Thread.start()와 Thread 객체의 모니터 락 획득 과정",
             'path'     : "Java",
             'type'     : "post",
-            'tags'     : "java, Concurrency, monitor lock, thread, synchronized",
+            'tags'     : "java, Concurrency, monitor lock, thread, synchronized, multi thread",
             'url'      : "/Java/thread-monitor-lock-1.html",
             'image'    : "/assets/img/thumbnail/thread-monitor-lock-1.png",
             'date'     : "2025-09-26"
@@ -5057,6 +5058,17 @@ t.start(); // IllegalThreadStateException 발생해야 함
             'url'      : "/Architecture/security-auth/2025-11-30-kakao-login.html",
             'image'    : "/assets/img/thumbnail/2025-11-30-kakao-login.png",
             'date'     : "2025-11-30"
+        });
+    
+
+        posts.push({
+            'title'    : "[Docker Troubleshooting] Spring Redis UnknownHostException 해결기: Spring 앱과 Redis의 외부 네트워크와 DNS 스코프 문제",
+            'path'     : "Trouble Shooting",
+            'type'     : "post",
+            'tags'     : "docker, docker-compose, redis, spring, networking, dns, ec2, devops, troubleshooting",
+            'url'      : "/Trouble%20Shooting/docker-redis-network-dns.html",
+            'image'    : "/assets/img/thumbnail/docker-redis-network-dns.png",
+            'date'     : "2025-12-08"
         });
     
 

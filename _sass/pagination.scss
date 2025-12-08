@@ -87,7 +87,8 @@
   .category{ color:mediumseagreen !important; }
 
   .txt_post {
-    display:-webkit-box;
+   display:-webkit-box;
+    visibility:  hidden;
     margin-bottom:12px;
     font-size:0.875rem;
     color:grey;

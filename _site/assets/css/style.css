@@ -699,6 +699,7 @@ input::-webkit-search-results-decoration {
 }
 #article_content .txt_post {
   display: -webkit-box;
+  visibility: hidden;
   margin-bottom: 12px;
   font-size: 0.875rem;
   color: grey;
