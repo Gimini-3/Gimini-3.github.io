@@ -33,7 +33,8 @@ thumbnail: "/assets/img/thumbnail/nginx-https-without-domain-nip-io.png"
 
 그래서 개발 단계에서는 nip.io 같은 DNS 서비스로 도메인처럼 검증 가능한 형태를 만든다.
 
-![img.png](../../_site/assets/img/img1-nginx-https-without-domain-nip-io.png)
+<img width="1266" height="200" alt="image" src="https://github.com/user-attachments/assets/2e8d46f8-1b97-452a-b49a-72c53bec0922" />
+
 
 ## 3. 주요 개념 설명
 
@@ -210,7 +211,9 @@ sudo certbot --nginx -d 52.79.47.44.nip.io
 ```
 
 밑의 과정은 위의 명령어를 쳤을 때 일어나는 일이다.
-![img_1.png](../../_site/assets/img/img2-nginx-https-without-domain-nip-io.png)
+
+<img width="773" height="886" alt="image" src="https://github.com/user-attachments/assets/738a14b8-9608-4fe5-b455-a67e94f98828" />
+
 
 1. **요청 (Request):** EC2에 설치된 Certbot이 Let's Encrypt 서버에 [52.79.47.44.nip.io](http://52.79.47.44.nip.io) 도메인 인증서를 발급해달라고 요청한다.
 2. **챌린지 (Challenge):** Let's Encrypt는 도메인 소유권을 확인하기 위해 문제를 낸다. "특정 파일 경로(`/.well-known/acme-challenge/...`)에 우리가 지정한 랜덤 데이터를 심어놔라"고 지시한다.
@@ -222,7 +225,8 @@ sudo certbot --nginx -d 52.79.47.44.nip.io
 
 TLS 통신은 데이터를 주고받기 전에 핸드쉐이크(Handshake) 과정을 통해 신뢰할 수 있는 서버인지 확인하고, 데이터를 암호화할 대칭키를 교환한다.
 
-![img_2.png](../../_site/assets/img/img3-nginx-https-without-domain-nip-io.png)
+<img width="579" height="875" alt="image" src="https://github.com/user-attachments/assets/0d2cefd2-f618-4605-bcf5-b5b34c616d54" />
+
 
 1. **Client Hello:** 클라이언트가 서버에 접속하며 자신이 지원하는 암호화 방식(Cipher Suite) 목록과 난수 데이터를 보낸다.
 2. **Server Hello & Certificate:** 서버는 클라이언트가 보낸 목록 중 하나를 선택하고, 자신의 신원 증명서인 **SSL 인증서(공개키 포함)(Let’s Encrypt)가 발급하고 디지털 서명(Signature)을 찍어준 파일 원본을** 보낸다.
