@@ -22,7 +22,9 @@ thumbnail: "/assets/img/thumbnail/oneco-ddd-dailycontent.png"
 ---
 
 ## 0. 도메인 구조 & 전체 코드 원문
-![img.png](img/img.png)
+
+<img width="1647" height="612" alt="image" src="https://github.com/user-attachments/assets/a6559a60-a1a9-404a-b516-ffd72a7451cd" />
+
 먼저 기준이 되는 `DailyContent` 애그리거트 전체 코드이다.
 
 (프로젝트를 진행하며 수정되거나 추가될 수도 있다. 수정된 코드는 깃허브에서 확인할 수 있다.)
