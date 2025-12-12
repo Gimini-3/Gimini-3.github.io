@@ -72,7 +72,8 @@ thumbnail: "/assets/img/thumbnail/oneco-ddd-dailycontent.png"
 
 먼저 도메인 구조를 그림으로 보면 이렇게 생겼다.
 
-![img.png](img/img.png)
+<img width="1647" height="612" alt="image" src="https://github.com/user-attachments/assets/773a9bd3-d727-4113-a895-1ca322219fd4" />
+
 
 이 구조를 한 줄로 설명하면:
 
