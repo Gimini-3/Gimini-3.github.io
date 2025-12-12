@@ -19,6 +19,7 @@ linkedin_username: g-m-627b33392
 #giscus_categoryId: "DIC_kwDOJ6fqWs4Cc7p7"
 #goatcounter_code: byanko77
 #google_analytics:
+#countapi_namespace: "gimini-3-github-io"
 
 # If your repo name follows the format "<user-name>.github.io", then leave the below blank.
 # Otherwise, set its value as "/<repo-name>". ex) baseurl: /myblog

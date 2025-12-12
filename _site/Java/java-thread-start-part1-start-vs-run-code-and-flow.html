@@ -76,6 +76,7 @@
 
 <meta name="baseurl" content="">
 <meta name="description" content="시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.">
+
         <link rel="preload" href="/assets/img/profile.jpg" as="image">
         <link rel="stylesheet" href="/assets/css/style.css">
         
@@ -174,6 +175,8 @@
             
             
             
+            
+            
 
     
     
@@ -190,11 +193,19 @@
                 </button>
 </div>
 <ul class="nav-list">
-<li id="nav-second" aria-label="api-design">
+<li id="nav-second" aria-label="Domain Design">
                     <div class="nav-item">
-                        <a href="/Architecture/api-design/" class="nav-list-link nav-sh">
+                        <a href="/Architecture/Domain%20Design/" class="nav-list-link nav-sh">
                             <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg>
-                            <span>api-design</span>
+                            <span>Domain Design</span>
+                        </a>
+</div>
+</li>
+<li id="nav-second" aria-label="System Design">
+                    <div class="nav-item">
+                        <a href="/Architecture/System%20Design/" class="nav-list-link nav-sh">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg>
+                            <span>System Design</span>
                         </a>
 </div>
 </li>
@@ -211,14 +222,6 @@
                         <a href="/Architecture/security-auth/" class="nav-list-link nav-sh">
                             <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg>
                             <span>security-auth</span>
-                        </a>
-</div>
-</li>
-<li id="nav-second" aria-label="system-design">
-                    <div class="nav-item">
-                        <a href="/Architecture/system-design/" class="nav-list-link nav-sh">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg>
-                            <span>system-design</span>
                         </a>
 </div>
 </li>
@@ -268,6 +271,7 @@
 </li>
 </ul>
 </nav>
+        
         <div id="contact">
             <hr>
             <h3>Contact</h3>
@@ -320,6 +324,7 @@
         <div class="toc-board"></div>
     </div>
 </div>
+
         <div id="post">
             <div class="inner-header">
                 <span class="dot" style="background-color: #F86158;"></span>
@@ -868,6 +873,7 @@ main()
 <div class="top-arrow">
     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"></path></svg>
 </div>
+
                 
             </div>
         </div>
@@ -912,10 +918,21 @@ main()
 
         posts.push({
             'title'    : "Index",
-            'path'     : "Architecture > api-design",
+            'path'     : "Architecture > Domain Design",
             'type'     : "category",
             'tags'     : "",
-            'url'      : "/Architecture/api-design/index.html",
+            'url'      : "/Architecture/Domain%20Design/index.html",
+            'image'    : "/assets/img/thumbnail/empty.jpg",
+            'date'     : "1900-01-01"
+        });
+    
+
+        posts.push({
+            'title'    : "Index",
+            'path'     : "Architecture > System Design",
+            'type'     : "category",
+            'tags'     : "",
+            'url'      : "/Architecture/System%20Design/index.html",
             'image'    : "/assets/img/thumbnail/empty.jpg",
             'date'     : "1900-01-01"
         });
@@ -949,17 +966,6 @@ main()
             'type'     : "category",
             'tags'     : "",
             'url'      : "/Architecture/security-auth/index.html",
-            'image'    : "/assets/img/thumbnail/empty.jpg",
-            'date'     : "1900-01-01"
-        });
-    
-
-        posts.push({
-            'title'    : "Index",
-            'path'     : "Architecture > system-design",
-            'type'     : "category",
-            'tags'     : "",
-            'url'      : "/Architecture/system-design/index.html",
             'image'    : "/assets/img/thumbnail/empty.jpg",
             'date'     : "1900-01-01"
         });
@@ -1110,10 +1116,10 @@ main()
 
         posts.push({
             'title'    : "[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계",
-            'path'     : "Architecture > system-design",
+            'path'     : "Architecture > System Design",
             'type'     : "post",
             'tags'     : "redis, worker, at-least-once-notification, spring schedule, blmove, redis-queue-blmove-idempotency",
-            'url'      : "/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html",
+            'url'      : "/Architecture/System%20Design/at-least-once-notification-redis-queue-blmove-idempotency.html",
             'image'    : "/assets/img/thumbnail/at-least-once-notification-redis-queue-blmove-idempotency.png",
             'date'     : "2025-11-03"
         });
@@ -1149,6 +1155,28 @@ main()
             'url'      : "/Trouble%20Shooting/nginx-https-without-domain-nip-io.html",
             'image'    : "/assets/img/thumbnail/nginx-https-without-domain-nip-io.png",
             'date'     : "2025-12-09"
+        });
+    
+
+        posts.push({
+            'title'    : "[ONECO DDD 도메인 설계 시리즈 Part 1] DailyContent 애그리거트 설계 스토리",
+            'path'     : "Architecture > Domain Design",
+            'type'     : "post",
+            'tags'     : "DDD, domain-driven design, domain design, architecture, aggregate, domain model, entity, value object",
+            'url'      : "/Architecture/Domain%20Design/oneco-ddd-dailycontent-1.html",
+            'image'    : "/assets/img/thumbnail/oneco-ddd-dailycontent.png",
+            'date'     : "2025-12-11"
+        });
+    
+
+        posts.push({
+            'title'    : "[ONECO DDD 도메인 설계 시리즈 Part 2] DailyContent 애그리거트 뜯어보기",
+            'path'     : "Architecture > Domain Design",
+            'type'     : "post",
+            'tags'     : "DDD, domain-driven design, domain design, architecture, aggregate, domain model, entity",
+            'url'      : "/Architecture/Domain%20Design/oneco-ddd-dailycontent-2.html",
+            'image'    : "/assets/img/thumbnail/oneco-ddd-dailycontent.png",
+            'date'     : "2025-12-12"
         });
     
 

@@ -22,6 +22,19 @@
     </div>
     <div class="side-info">
         {% include navigation.html %}
+        {% if site.countapi_namespace %}
+        <div id="visit-stats">
+            <h3>Visits</h3>
+            <div class="stat-row">
+                <span class="stat-label">전체</span>
+                <span class="stat-value" id="stat-total" data-count="total">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">오늘</span>
+                <span class="stat-value" id="stat-today" data-count="today">-</span>
+            </div>
+        </div>
+        {% endif %}
         <div id="contact">
             <hr>
             <h3>Contact</h3>

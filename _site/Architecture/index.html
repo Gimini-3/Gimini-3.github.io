@@ -76,6 +76,7 @@
 
 <meta name="baseurl" content="">
 <meta name="description" content="시스템 설계와 깊게 공부하는 것을 좋아하는 개발자의 블로그입니다.">
+
         <link rel="preload" href="/assets/img/profile.jpg" as="image">
         <link rel="stylesheet" href="/assets/css/style.css">
         
@@ -158,6 +159,8 @@
             
             
             
+            
+            
 
     
     
@@ -174,11 +177,19 @@
                 </button>
 </div>
 <ul class="nav-list">
-<li id="nav-second" aria-label="api-design">
+<li id="nav-second" aria-label="Domain Design">
                     <div class="nav-item">
-                        <a href="/Architecture/api-design/" class="nav-list-link nav-sh">
+                        <a href="/Architecture/Domain%20Design/" class="nav-list-link nav-sh">
                             <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg>
-                            <span>api-design</span>
+                            <span>Domain Design</span>
+                        </a>
+</div>
+</li>
+<li id="nav-second" aria-label="System Design">
+                    <div class="nav-item">
+                        <a href="/Architecture/System%20Design/" class="nav-list-link nav-sh">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg>
+                            <span>System Design</span>
                         </a>
 </div>
 </li>
@@ -195,14 +206,6 @@
                         <a href="/Architecture/security-auth/" class="nav-list-link nav-sh">
                             <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg>
                             <span>security-auth</span>
-                        </a>
-</div>
-</li>
-<li id="nav-second" aria-label="system-design">
-                    <div class="nav-item">
-                        <a href="/Architecture/system-design/" class="nav-list-link nav-sh">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg>
-                            <span>system-design</span>
                         </a>
 </div>
 </li>
@@ -252,6 +255,7 @@
 </li>
 </ul>
 </nav>
+        
         <div id="contact">
             <hr>
             <h3>Contact</h3>
@@ -297,6 +301,7 @@
         </button>
     </div>
 </div>
+
         <div id="post">
             <div class="inner-header">
                 <span class="dot" style="background-color: #F86158;"></span>
@@ -329,6 +334,1145 @@
 </h1>
 <div id="category-list">
     <ul class="paginated-list" data-current-page="1" aria-live="polite">
+        <li class="paginated-item">
+                <div id="article_content">
+                    <div class="thumbnail_zone">
+                        
+                            <a href="/Architecture/Domain%20Design/oneco-ddd-dailycontent-2.html" class="thumbnail_post" loading="lazy" aria-label="thumbnail_post" style="background-image:url('/assets/img/thumbnail/oneco-ddd-dailycontent.png') !important"></a>
+                        
+                    </div>
+                    <div class="box_contents">
+                        <a href="/Architecture/Domain%20Design/oneco-ddd-dailycontent-2.html"><h1 class="title_post">[ONECO DDD 도메인 설계 시리즈 Part 2] DailyContent 애그리거트 뜯어보기</h1></a>
+                        <a href="/Architecture/Domain%20Design/oneco-ddd-dailycontent-2.html" class="txt_post">
+                            [ONECO DDD 도메인 설계 시리즈 Part 2] DailyContent 애그리거트 뜯어보기
+
+
+  Part 1에서는 “왜 DailyContent를 애그리거트 루트로 두었는가”를 개념적으로 정리했다면,
+이번 Part 2는 실제 코드 한 파일(DailyContent.java)(애그리거트)을 기준으로 설계 의도와 동작 방식을 해부하는 글이다.
+
+
+
+
+
+0. 도메인 구조 &amp; 전체 코드 원문
+
+먼저 기준이 되는 DailyContent 애그리거트 전체 코드이다.
+
+(프로젝트를 진행하며 수정되거나 추가될 수도 있다. 수정된 코드는 깃허브에서 확인할 수 있다.)
+
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "daily_contents",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name= "uk_category_day_sequence",
+            columnNames = {"category_id", "day_sequence"}
+        )
+    })
+public class DailyContent {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Embedded
+    private CategoryId categoryId;
+
+    @Convert(converter = DaySequenceConverter.class)
+    private DaySequence daySequence;
+
+    @Embedded
+    private ContentDescription description;
+
+    @Embedded
+    private Keyword keyword;
+
+    @Embedded
+    @AttributeOverride(name = "url", column = @Column(name = "image_url", nullable = false))
+    private ImageFile imageFile;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "daily_content_id", nullable = false)
+    private List&lt;NewsItem&gt; newsItems = new ArrayList&lt;&gt;();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "daily_content_id", nullable = false)
+    private List&lt;Quiz&gt; quizzes = new ArrayList&lt;&gt;();
+
+    private DailyContent(
+        CategoryId categoryId,
+        DaySequence daySequence,
+        Keyword keyword,
+        ContentDescription description,
+        ImageFile imageFile
+    ) {
+        if(categoryId == null) {
+            throw new IllegalArgumentException("categoryId는 null일 수 없습니다.");
+        }
+        if(daySequence == null) {
+            throw new IllegalArgumentException("daySequence는 null일 수 없습니다.");
+        }
+        if(keyword == null) {
+            throw new IllegalArgumentException("keyword는 null일 수 없습니다.");
+        }
+        if(description == null) {
+            throw new IllegalArgumentException("description는 null일 수 없습니다.");
+        }
+        if(imageFile == null) {
+            throw new IllegalArgumentException("imageFile는 null일 수 없습니다.");
+        }
+        this.categoryId = categoryId;
+        this.daySequence = daySequence;
+        this.keyword = keyword;
+        this.description = description;
+        this.imageFile = imageFile;
+    }
+
+    public static DailyContent create(
+        CategoryId categoryId,
+        DaySequence daySequence,
+        Keyword keyword,
+        ContentDescription description,
+        ImageFile imageFile
+    ) {
+        return new DailyContent(categoryId, daySequence, keyword, description, imageFile);
+    }
+
+    public void updateDescription(ContentDescription newDescription) {
+        Objects.requireNonNull(newDescription, "newDescription은 null일 수 없습니다.");
+        this.description = newDescription;
+    }
+
+    public void changeSummary(String newSummary) {
+        this.description = this.description.withSummary(newSummary);
+    }
+
+    public void changeTitle(String newTitle){
+        this.description = this.description.withTitle(newTitle);
+    }
+
+    public void changeBodyText(String newBodyText) {
+        this.description = this.description.withBodyText(newBodyText);
+    }
+
+    public List&lt;NewsItem&gt; getNewsItems(){
+        return List.copyOf(newsItems);
+    }
+
+    public void updateNewsTitle(NewsItemOrder order, String newTitle) {
+        NewsItem target = this.newsItems.stream()
+            .filter(item -&gt; item.getNewsItemOrder().equals(order))
+            .findFirst()
+            .orElseThrow(() -&gt; new IllegalArgumentException("해당 순번의 뉴스가 존재하지 않습니다."));
+
+        target.changeTitle(newTitle);
+    }
+
+    public void updateQuizQuestion(QuestionOrder order, String newQuestion) {
+        Quiz target = this.quizzes.stream()
+            .filter(q -&gt; q.getQuestionOrder().equals(order))
+            .findFirst()
+            .orElseThrow(() -&gt; new IllegalArgumentException("해당 순번의 퀴즈가 존재하지 않습니다."));
+
+        target.changeQuestion(newQuestion);
+    }
+
+    public NewsItem addNewsItem(
+        String title,
+        NewsItemOrder order,
+        WebLink link,
+        ImageFile imageFile
+    ) {
+        Objects.requireNonNull(title, "title은 null일 수 없다.");
+        Objects.requireNonNull(order, "order는 null일 수 없다.");
+        Objects.requireNonNull(imageFile, "imageFile은 null일 수 없다.");
+        Objects.requireNonNull(link, "link는 null일 수 없다.");
+
+        validateNewsOrderDuplicate(order);
+
+        NewsItem item = NewsItem.create(title, link, order, imageFile);
+        newsItems.add(item);
+        return item;
+    }
+
+    public void removeNewsItem( NewsItem item) {
+        if (item ==null) {
+            throw new IllegalArgumentException("뉴스 아이템은 null일 수 없습니다.");
+        }
+        newsItems.remove(item);
+    }
+
+    public void removeNewsItemByOrder(NewsItemOrder order) {
+        boolean removed = this.newsItems.removeIf(item -&gt; item.getNewsItemOrder().equals(order));
+        if (!removed) {
+            throw new IllegalArgumentException("삭제할 뉴스가 존재하지 않습니다.");
+        }
+    }
+
+    public void changeKeyword(Keyword newKeyword) {
+        Objects.requireNonNull(newKeyword, "newKeyword는 null일 수 없다.");
+        this.keyword = newKeyword;
+    }
+
+    public void changeImage(ImageFile newImageFile) {
+        Objects.requireNonNull(newImageFile, "newImageFile는 null일 수 없다.");
+        this.imageFile = newImageFile;
+    }
+
+    public boolean isSameCategory(CategoryId other) {
+        return this.categoryId.equals(other);
+    }
+
+    public List&lt;Quiz&gt; getQuizzes(){
+        return List.copyOf(quizzes);
+    }
+
+    public Quiz addQuiz(
+        String question,
+        QuestionOrder order,
+        QuizOptions options,
+        AnswerIndex answerIndex
+    ) {
+        Objects.requireNonNull(question, "question은 null일 수 없다.");
+        Objects.requireNonNull(order, "order는 null일 수 없다.");
+        Objects.requireNonNull(options, "options는 null일 수 없다.");
+        Objects.requireNonNull(answerIndex, "answerIndex는 null일 수 없다.");
+
+        validateQuizOrderDuplicate(order);
+
+        Quiz quiz = Quiz.create(question, order, options, answerIndex);
+        quizzes.add(quiz);
+        return quiz;
+    }
+
+    public void removeQuiz( Quiz quiz) {
+        if (quiz ==null) {
+            throw new IllegalArgumentException("퀴즈는 null일 수 없습니다.");
+        }
+        quizzes.remove(quiz);
+    }
+
+    public void removeQuizByOrder(QuestionOrder order) {
+        boolean removed = this.quizzes.removeIf(q -&gt; q.getQuestionOrder().equals(order));
+        if (!removed) {
+            throw new IllegalArgumentException("삭제할 퀴즈가 존재하지 않습니다: " + order.value());
+        }
+    }
+
+    private void validateNewsOrderDuplicate(NewsItemOrder order) {
+        if (newsItems.stream().anyMatch(n -&gt; n.getNewsItemOrder().equals(order))) {
+            throw new IllegalArgumentException("동일한 뉴스 순번이 이미 존재합니다: " + order.value());
+        }
+    }
+
+    private void validateQuizOrderDuplicate(QuestionOrder order) {
+        if (quizzes.stream().anyMatch(q -&gt; q.getQuestionOrder().equals(order))) {
+            throw new IllegalArgumentException("동일한 퀴즈 순번이 이미 존재합니다: " + order.value());
+        }
+    }
+}
+
+
+
+이제 이 코드를 “애그리거트 루트로서 어떤 책임을 갖고 있는지” 관점에서 단계적으로 살펴본다.
+
+
+
+1. 애그리거트 @Entity, @Table, 유니크 제약
+
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "daily_contents",
+uniqueConstraints = {
+@UniqueConstraint(
+name= "uk_category_day_sequence",
+columnNames = {"category_id", "day_sequence"}
+)
+})
+public class DailyContent { ... }
+
+
+여기에는 세 가지 의도가 들어 있다.
+
+
+  
+    @Entity + @Table(name = "daily_contents")
+
+    도메인 이름은 DailyContent지만, 테이블은 daily_contents 로 복수형 snake_case를 사용했다.
+
+    스키마만 열어봐도 “여러 개의 DailyContent가 모여 있는 테이블”이라는 사실을 직관적으로 알 수 있게 하기 위한 선택이다.
+  
+  
+    @NoArgsConstructor(access = PROTECTED)
+
+    JPA가 리플렉션으로 인스턴스를 만들 수 있도록 기본 생성자는 열어두되,
+
+    애플리케이션 코드에서 무분별하게 new DailyContent() 하지 못하도록 보호한다.
+
+    실제 생성 경로는 아래에서 볼 create(...) 팩토리로만 강제된다.
+  
+  
+    @UniqueConstraint(category_id, day_sequence)
+
+    (카테고리, 일차) 조합이 유일해야 한다는 비즈니스 규칙을 DB까지 내리는 선택이다.
+
+    
+      도메인 규칙: “카테고리 A의 3일차 DailyContent는 단 하나만 존재한다.”
+      이 규칙을 RDB의 유니크 키로 함께 보강함으로써, 애플리케이션 버그나 동시성 이슈로 인한 중복 생성도 차단한다.
+    
+  
+
+
+DDD 관점에서 보면, 애그리거트 루트의 핵심 불변식 하나를 데이터베이스에 위임한 형태이다.
+
+
+
+2. 하루치 학습 경험을 표현하는 값 객체들
+
+DailyContent는 원시 타입을 거의 사용하지 않고 대부분을 VO로 감싼다.
+
+@Embedded
+private CategoryId categoryId;
+
+@Convert(converter = DaySequenceConverter.class)
+private DaySequence daySequence;
+
+@Embedded
+private ContentDescription description;
+
+@Embedded
+private Keyword keyword;
+
+@Embedded
+@AttributeOverride(name = "url", column = @Column(name = "image_url", nullable = false))
+private ImageFile imageFile;
+
+
+
+각 VO의 역할은 다음과 같다.
+
+2.1 CategoryId
+
+
+  단순 Long categoryId 대신 CategoryId VO 사용.
+  값 생성 시 “양수인지, null 아닌지”를 VO 내부에서 보장한다.
+  다른 애그리거트(카테고리)와 연결되는 키이기도 하기 때문에, 의미 있는 타입으로 감싸 검증 포인트를 한 곳에 모았다.
+
+
+2.2 DaySequence
+
+
+  “이 카테고리에서 몇 번째 날인지(1일차, 2일차…)” 를 표현하는 타입.
+  AbstractSequence를 상속하여 “1 이상”이라는 공통 규칙을 재사용한다.
+  JPA 매핑은 @Convert(converter = DaySequenceConverter.class) 를 통해 INT 한 컬럼으로 저장한다.
+  도메인 코드에서는 항상 DaySequence 타입으로 다룸으로써, 날짜/일차 개념이 섞이지 않도록 한다.
+
+
+2.3 ContentDescription
+
+
+  title, summary, bodyText 를 하나의 VO로 묶었다.
+  길이 제한, 공백 허용 여부, null 불가 등의 검증은 모두 VO 생성 시점에 수행된다.
+  DailyContent는 “설명 자체가 null인지” 정도만 체크하고, 문자열 유효성은 VO에 위임한다.
+
+
+2.4 Keyword
+
+
+  오늘의 핵심 키워드(예: “기준금리”, “양적완화”)를 표현한다.
+  최대 길이, 공백 제거(trim), 빈 문자열 방지 등의 검증을 VO 내부에서 수행한다.
+
+
+2.5 ImageFile
+
+
+  대표 이미지에 대한 url을 표현하는 VO.
+  지금은 url 한 개만 갖지만, 나중에 “허용 도메인, 허용 확장자, 규격” 같은 정책을 추가할 때도 이 타입 안에서 일관되게 처리할 수 있다.
+
+
+요약
+
+DailyContent는 “하루치 학습 경험”을 구성하는 요소들을 전부 의미 있는 타입(VO)으로 받고,
+
+각 VO는 “자기 값은 자기 책임으로 검증하는” 구조를 가진다.
+
+애그리거트 루트는 값의 조합과 일관성에 집중하고, 값 자체의 정합성은 VO 레벨에서 담당한다.
+
+
+
+3. NewsItem / Quiz 컬렉션: 애그리거트 내부 엔티티 관리
+
+@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+@JoinColumn(name = "daily_content_id", nullable = false)
+private List&lt;NewsItem&gt; newsItems = new ArrayList&lt;&gt;();
+
+@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+@JoinColumn(name = "daily_content_id", nullable = false)
+private List&lt;Quiz&gt; quizzes = new ArrayList&lt;&gt;();
+
+
+
+여기에는 애그리거트 생명주기와 관련된 설계 의도가 들어 있다.
+
+부모 자체를 삭제하면 cascade, 컬렉션에서 자식만 빼면 orphanRemoval이 동작한다.
+
+3.1 cascade = CascadeType.ALL
+
+
+  DailyContent를 저장/삭제할 때, 관련된 NewsItem/Quiz도 함께 저장/삭제된다.
+  즉, “하루치 콘텐츠”의 생명주기에 뉴스·퀴즈를 묶는다.
+  DDD 용어로, NewsItem과 Quiz는 같은 애그리거트에 속한 엔티티이며, 루트인 DailyContent가 이들의 생명주기를 관리한다.
+
+
+3.2 orphanRemoval = true
+
+
+  DailyContent에서 제거된 NewsItem/Quiz는 DB에서도 자동 삭제된다.
+  즉, “부모(DailyContent)와의 연결이 끊긴 자식(NewsItem/Quiz)은 자동으로 DB에서 DELETE 하겠다” 라는 옵션이다.
+    
+      컬렉션에서 분리된 자식 엔티티를 그냥 메모리에서만 떼어내는 게 아니라, DB에서도 같이 지워주는 옵션
+    
+  
+  관리 UI에서 DailyContent의 뉴스 한 개를 제거하면, JPA가 해당 NewsItem을 고아 객체로 판단하여 DB에서 DELETE까지 자동으로 해준다.
+
+
+3.3 단방향 OneToMany + FK
+
+
+  @JoinColumn(name = "daily_content_id") 를 통해 자식 테이블에 FK를 두되,
+  자식 엔티티(NewsItem, Quiz) 쪽에는 @ManyToOne 필드가 없다.
+  즉, 도메인 모델 상으로는 “DailyContent → 자식들” 단방향만 존재한다.
+
+
+이는 “부모(하루치 경험)를 중심으로만 모델을 다루겠다”는 의도에 가깝다.
+
+조회 최적화가 필요해지면, 별도의 조회용 쿼리/리포지토리를 두는 방식으로 보완할 수 있다.
+
+
+
+4. 생성과 팩토리: 생성 시점에 불변식 잠그기
+
+private DailyContent(
+    CategoryId categoryId,
+    DaySequence daySequence,
+    Keyword keyword,
+    ContentDescription description,
+    ImageFile imageFile
+) {
+		this.categoryId = Objects.requireNonNull(categoryId, "categoryId는 null일 수 없습니다.");
+    this.daySequence = Objects.requireNonNull(daySequence, "daySequence는 null일 수 없습니다.");
+    this.keyword = Objects.requireNonNull(keyword, "keyword는 null일 수 없습니다.");
+    this.description = Objects.requireNonNull(description, "description은 null일 수 없습니다.");
+    this.imageFile = Objects.requireNonNull(imageFile, "imageFile는 null일 수 없습니다.");
+}
+
+public static DailyContent create(
+    CategoryId categoryId,
+    DaySequence daySequence,
+    Keyword keyword,
+    ContentDescription description,
+    ImageFile imageFile
+) {
+    return new DailyContent(categoryId, daySequence, keyword, description, imageFile);
+}
+
+
+
+설계 포인트
+
+
+  생성자는 private, 생성 경로는 create(...) 로만
+    
+      JPA용 기본 생성자 외에,
+    
+  
+
+
+애플리케이션 코드에서 사용할 생성 경로를 정적 팩토리 하나로 통일했다.
+
+
+  생성 시 검증 로직이 늘어나도 팩토리 내부만 수정하면 되고, 호출부는 그대로 유지된다.
+    
+      루트에서 하는 검증 vs VO에서 하는 검증
+    
+  
+  루트는 “필수 구성요소가 null이 아닌가?”를 체크한다.
+  VO는 “값 자체가 유효한가?(양수인지, 길이 제한 안쪽인지 등)”를 체크한다.
+  이 레이어 분리를 통해, 생성 시점의 책임을 명확하게 나눌 수 있다.
+
+
+서비스 계층에서의 사용 예
+
+@Service
+@RequiredArgsConstructor
+public class DailyContentService {
+
+    private final DailyContentRepository dailyContentRepository;
+
+    @Transactional
+    public DailyContent createDailyContent(CreateDailyContentCommand cmd) {
+        DailyContent dailyContent = DailyContent.create(
+            CategoryId.of(cmd.categoryId()),
+            new DaySequence(cmd.daySequence()),
+            Keyword.of(cmd.keyword()),
+            ContentDescription.of(cmd.title(), cmd.summary(), cmd.body()),
+            ImageFile.of(cmd.imageUrl())
+        );
+
+        return dailyContentRepository.save(dailyContent);
+    }
+}
+
+
+
+서비스는 다음 역할만 가진다.
+
+
+  원시 입력값 → VO 변환
+  애그리거트 생성/저장 오케스트레이션
+
+
+도메인 규칙(필수 값, 조합의 의미, VO 유효성)은 모두 루트와 VO 내부에 몰아둔 구조다.
+
+
+
+5. 설명/키워드/이미지 변경: VO 교체 기반의 변경
+
+public void updateDescription(ContentDescription newDescription) {
+    Objects.requireNonNull(newDescription, "newDescription은 null일 수 없습니다.");
+    this.description = newDescription;
+}
+
+public void changeSummary(String newSummary) {
+    this.description = this.description.withSummary(newSummary);
+}
+
+public void changeTitle(String newTitle){
+    this.description = this.description.withTitle(newTitle);
+}
+
+public void changeBodyText(String newBodyText) {
+    this.description = this.description.withBodyText(newBodyText);
+}
+
+public void changeKeyword(Keyword newKeyword) {
+    Objects.requireNonNull(newKeyword, "newKeyword는 null일 수 없다.");
+    this.keyword = newKeyword;
+}
+
+public void changeImage(ImageFile newImageFile) {
+    Objects.requireNonNull(newImageFile, "newImageFile는 null일 수 없다.");
+    this.imageFile = newImageFile;
+}
+
+
+
+핵심 아이디어
+
+
+  VO를 직접 수정하지 않고 새 VO로 교체한다.
+    
+      withSummary, withTitle 등은 새로운 ContentDescription 인스턴스를 만들어 반환한다.
+      기존 VO는 불변 객체로 취급되며, 변경은 항상 “새 객체로 교체” 형태로 일어난다.
+    
+  
+  루트는 “null 방지”까지만 책임
+    
+      null 방지는 DailyContent가,
+      문자열 길이/형식 검증 등은 VO가 맡는다.
+      단, String의 null/공백/길이 규칙은 ContentDescription 안에서만 관리한다.
+    
+  
+
+
+서비스 계층에서의 사용 예는 다음과 같이 단순하다.
+
+@Transactional
+public void updateDailyContentSummary(Long dailyContentId, String newSummary) {
+    DailyContent dc = dailyContentRepository.findById(dailyContentId)
+        .orElseThrow(() -&gt; new NotFoundException("DailyContent not found"));
+
+    dc.changeSummary(newSummary);
+}
+
+
+
+
+
+6. 컬렉션 보호와 도메인 메서드 기반 조작
+
+6.1. 읽기 전용 뷰 제공
+
+public List&lt;NewsItem&gt; getNewsItems(){
+    return List.copyOf(newsItems);
+}
+
+public List&lt;Quiz&gt; getQuizzes(){
+    return List.copyOf(quizzes);
+}
+
+
+
+
+  List.copyOf(...) 를 사용해 방어적 복사 + 불변 리스트를 반환한다.
+  외부 코드에서 getNewsItems().add(...) 같은 조작을 시도하면 UnsupportedOperationException 이 발생한다.
+  즉, 구조 변경은 반드시 애그리거트 루트의 메서드를 거치도록 강제한 것이다.
+
+
+6.2. 추가/삭제는 루트 메서드를 통해서만
+
+뉴스 추가:
+
+public NewsItem addNewsItem(
+    String title,
+    NewsItemOrder order,
+    WebLink link,
+    ImageFile imageFile
+) {
+    Objects.requireNonNull(title, "title은 null일 수 없다.");
+    Objects.requireNonNull(order, "order는 null일 수 없다.");
+    Objects.requireNonNull(imageFile, "imageFile은 null일 수 없다.");
+    Objects.requireNonNull(link, "link는 null일 수 없다.");
+
+    validateNewsOrderDuplicate(order);
+
+    NewsItem item = NewsItem.create(title, link, order, imageFile);
+    newsItems.add(item);
+    return item;
+}
+
+
+
+퀴즈 추가:
+
+public Quiz addQuiz(
+    String question,
+    QuestionOrder order,
+    QuizOptions options,
+    AnswerIndex answerIndex
+) {
+    Objects.requireNonNull(question, "question은 null일 수 없다.");
+    Objects.requireNonNull(order, "order는 null일 수 없다.");
+    Objects.requireNonNull(options, "options는 null일 수 없다.");
+    Objects.requireNonNull(answerIndex, "answerIndex는 null일 수 없다.");
+
+    validateQuizOrderDuplicate(order);
+
+    Quiz quiz = Quiz.create(question, order, options, answerIndex);
+    quizzes.add(quiz);
+    return quiz;
+}
+
+
+
+중복 순번 검증:
+
+private void validateNewsOrderDuplicate(NewsItemOrder order) {
+    if (newsItems.stream().anyMatch(n -&gt; n.getNewsItemOrder().equals(order))) {
+        throw new IllegalArgumentException("동일한 뉴스 순번이 이미 존재합니다: " + order.value());
+    }
+}
+
+private void validateQuizOrderDuplicate(QuestionOrder order) {
+    if (quizzes.stream().anyMatch(q -&gt; q.getQuestionOrder().equals(order))) {
+        throw new IllegalArgumentException("동일한 퀴즈 순번이 이미 존재합니다: " + order.value());
+    }
+}
+
+
+
+설계 의도는 명확하다.
+
+
+  “뉴스/퀴즈 추가”는 반드시 루트의 도메인 메서드를 통과해야 한다.
+  그 안에서
+    
+      필수 값 null 방지
+      순번(order) 중복 방지
+      
+        내부 엔티티 생성 규칙
+
+        를 모두 처리한다.
+      
+    
+  
+
+
+서비스에서는 다음과 같이 사용하게 된다.
+
+@Transactional
+public void addNewsToDailyContent(Long dailyContentId, AddNewsCommand cmd) {
+    DailyContent dc = dailyContentRepository.findById(dailyContentId)
+        .orElseThrow(() -&gt; new NotFoundException("DailyContent not found"));
+
+    dc.addNewsItem(
+        cmd.title(),
+        new NewsItemOrder(cmd.order()),
+        WebLink.of(cmd.url()),
+        ImageFile.of(cmd.imageUrl())
+    );
+}
+
+
+
+외부에서 newsItems.add(...) 를 직접 호출할 수 없기 때문에,
+
+애그리거트 불변식을 우회해서 깨뜨리기 어렵다.
+
+
+
+7. 서비스 계층에서 본 “하루치 경험” 생성 흐름
+
+DailyContent를 기준으로 “하루치 학습 경험 + 뉴스 + 퀴즈” 를 한 번에 생성하는 흐름을 예로 들면 다음과 같다.
+
+@Transactional
+public Long createWithNewsAndQuiz(CreateDailyContentAllInOneCommand cmd) {
+
+    DailyContent dc = DailyContent.create(
+        CategoryId.of(cmd.categoryId()),
+        new DaySequence(cmd.daySequence()),
+        Keyword.of(cmd.keyword()),
+        ContentDescription.of(cmd.title(), cmd.summary(), cmd.body()),
+        ImageFile.of(cmd.imageUrl())
+    );
+
+    for (CreateNewsCommand n : cmd.newsList()) {
+        dc.addNewsItem(
+            n.title(),
+            new NewsItemOrder(n.order()),
+            WebLink.of(n.url()),
+            ImageFile.of(n.imageUrl())
+        );
+    }
+
+    for (CreateQuizCommand q : cmd.quizList()) {
+        QuizOptions options = QuizOptions.ofTexts(q.options());
+        AnswerIndex answerIndex = new AnswerIndex(q.answerIndex());
+
+        dc.addQuiz(
+            q.question(),
+            new QuestionOrder(q.order()),
+            options,
+            answerIndex
+        );
+    }
+
+    DailyContent saved = dailyContentRepository.save(dc);
+    return saved.getId();
+}
+
+
+
+관심사의 분리는 이렇게 정리할 수 있다.
+
+
+  서비스 계층
+    
+      트랜잭션 관리
+      유스케이스 오케스트레이션(“하루치 경험 + 뉴스 + 퀴즈를 한 번에 구성”)
+    
+  
+  애그리거트 루트(DailyContent)
+    
+      하루치 경험의 일관성, 불변식, 내부 엔티티 관리
+    
+  
+  VO
+    
+      자기 값의 유효성 검증
+    
+  
+  
+    Part 2에서는 DailyContent.java 한 파일을 기준으로,
+
+    “하루치 학습 경험” 애그리거트가 어떤 책임을 갖고 있는지 살펴봤다.
+  
+  
+    @Entity/@Table/유니크 제약으로
+
+    “카테고리별 N일차는 하나”라는 불변식을 DB까지 끌어내리고,
+  
+  
+    CategoryId, DaySequence, ContentDescription, Keyword, ImageFile 같은 값 객체들로
+
+    원시 타입 대신 “의미 있는 타입 + 자체 검증”을 사용했다.
+  
+  
+    NewsItem/Quiz는 같은 애그리거트 안에 속한 엔티티로 두고,
+
+    cascade + orphanRemoval + 단방향 OneToMany 로 DailyContent 생명주기에 종속시켰다.
+  
+  
+    생성/수정/추가/삭제는 전부 DailyContent의 도메인 메서드를 통해 이루어지며,
+
+    서비스 계층은 “VO 변환 + 애그리거트 조합 + 트랜잭션”에만 집중한다.
+  
+
+
+                        </a>
+                        <div class="info-post">
+                                <a href="/Architecture" class="category">Architecture</a>
+                            
+                                <span class="date">· 2025-12-12</span>
+                            
+                        </div>
+                    </div>
+                </div>
+            </li>
+        
+        
+        <li class="paginated-item">
+                <div id="article_content">
+                    <div class="thumbnail_zone">
+                        
+                            <a href="/Architecture/Domain%20Design/oneco-ddd-dailycontent-1.html" class="thumbnail_post" loading="lazy" aria-label="thumbnail_post" style="background-image:url('/assets/img/thumbnail/oneco-ddd-dailycontent.png') !important"></a>
+                        
+                    </div>
+                    <div class="box_contents">
+                        <a href="/Architecture/Domain%20Design/oneco-ddd-dailycontent-1.html"><h1 class="title_post">[ONECO DDD 도메인 설계 시리즈 Part 1] DailyContent 애그리거트 설계 스토리</h1></a>
+                        <a href="/Architecture/Domain%20Design/oneco-ddd-dailycontent-1.html" class="txt_post">
+                            [ONECO DDD 도메인 설계 시리즈 Part 1] DailyContent 설계 스토리
+
+
+  “사용자가 카테고리를 선택하면, 매일 ‘키워드 + 설명 + 관련 뉴스들 + 퀴즈’를 한 세트로 공부한다.
+
+
+
+소프트웨어 개발을 시작할 때 습관적으로 데이터베이스 스키마부터 그린다.
+
+우리 프로젝트에서 요구를 듣고, 나와 팀원은 단순히 여러 테이블의 조합이 아니라 애그리거트들의 조합으로 시스템을 설계하기로 했다.
+
+우리 프로젝트의 애그리거트 중 하나인 DailyContent 애그리거트의 설계 과정을 기록한다.
+
+이 글은 “코드 설명”이 아니라 도메인 설계 의도를 기록하는 글이다. (코드 설명은 다음 글부터)
+
+
+  왜 이 프로젝트에 DDD(도메인 주도 설계) 를 썼는지
+  왜 DailyContent를 애그리거트 루트로 잡았는지
+  왜 News / Quiz는 엔티티, 나머지는 값 객체(VO) 로 두었는지
+
+
+
+
+1. 이 프로젝트에 DDD를 쓰기로 한 이유
+
+프로젝트에서 사용자에게 제공되는 ‘하루치 공부’는 단순히 텍스트 본문 하나가 아니다.
+“오늘의 경제 용어(키워드) + 설명 본문 + 관련 뉴스 기사들 + 복습 퀴즈”가 하나의 세트로 묶여서 제공된다.
+
+처음에는 이걸 전형적인 관계형 DB 관점으로만 바라봤다.
+
+
+  daily_content 테이블
+  news 테이블
+  quiz 테이블
+
+
+그리고 서비스 레이어에서 이 세 테이블을 각각 조회해서 조립하는 방식으로 구현하려고 했다.
+
+그런데 곧 여러 도메인 규칙들이 눈에 들어오기 시작했다.
+
+
+  뉴스가 없는 콘텐츠는 발행될 수 없다.
+  퀴즈의 순서는 콘텐츠 내에서 유일해야 한다.
+  콘텐츠가 삭제되면, 그날의 뉴스나 퀴즈만 덩그러니 남아서는 안 된다.
+  …
+
+
+이 규칙들을 서비스 레이어의 수많은 if 문으로만 관리하다 보면
+
+서비스 레이어는 점점 “조립 + 검증 + 예외처리”가 뒤섞인 거대한 절차 코드가 될 것이 뻔했다.
+
+그래서 “서비스에서 데이터 조합을 관리하는 구조” 대신,
+
+도메인 객체 스스로가 자신의 상태를 검증하고, 규칙을 보장하는 구조로 바꾸기로 했다.
+
+즉, daily_content, news, quiz를 느슨하게 조립하는 것이 아니라
+
+“하루치 공부”라는 개념 자체를 하나의 애그리거트(DailyContent)로 묶고,
+
+그 안에서 “뉴스가 최소 1개 이상인지, 퀴즈 순번이 중복되지 않는지” 같은 규칙을 책임지도록 설계했다.
+
+
+
+2. DailyContent 애그리거트의 큰 그림
+
+먼저 도메인 구조를 그림으로 보면 이렇게 생겼다.
+
+
+
+이 구조를 한 줄로 설명하면:
+
+
+  DailyContent(AR)가 “카테고리별 N일차”를 대표하고,
+
+  그 아래에 NewsItem/Quiz 엔티티와 여러 값 객체들이 매달려 있는 형태.
+
+
+
+이다.
+
+
+
+3. 왜 DailyContent가 애그리거트 루트인가?
+
+3.1. 도메인 상의 한 덩어리: 하루치 학습 경험
+
+기획/운영 관점에서 보면, 이 서비스의 세계는 이렇게 보인다.
+
+
+  카테고리 “돈의 흐름”은 14일짜리 코스
+  그중 “3일차”에는
+    
+      오늘의 키워드 1개
+      설명(제목, 요약, 본문)
+      관련 뉴스 2~3개
+      퀴즈 1~3개
+    
+  
+  운영자가 하는 일:
+    
+      “돈의 흐름 3일차 콘텐츠 작성/수정/배포”
+      잘못 올라갔으면 “3일차 전체 롤백”
+    
+  
+
+
+즉, 비즈니스가 바라보는 일관성의 최소 단위는
+
+
+  “카테고리 X의 N일차”
+
+
+
+이다.
+
+데이터베이스 입장에서는 여러 테이블이지만, 사람 입장에서는 이것이 하나의 세트다.
+
+그래서 이 세트를 대표하는 루트로 DailyContent 를 세웠다.
+
+
+  트랜잭션 단위: “3일차 DailyContent + 그 하위의 News/Quiz 포함” 한 번에 저장
+  API 단위: /api/daily-contents/{categoryId}/{daySequence} 로 한 번에 조회/제공할 수도 있음
+
+
+DDD에서 말하는 “애그리거트”의 정의를 가져오면:
+
+
+  “항상 함께 일관성을 유지해야 하는 도메인 객체들의 묶음”
+
+
+
+이 프로젝트에서는 그게 바로 DailyContent와 그 내부 구성 요소들이었다.
+
+3.2. 유일성 규칙과 경계
+
+DailyContent에는 이런 규칙이 있다.
+
+
+  같은 카테고리에서 같은 DaySequence는 하나만 존재해야 한다.
+
+
+이 규칙을 코드/DB에선 이렇게 녹였다.
+
+
+  도메인 규칙: “CategoryId + DaySequence 조합은 유일”
+  DB 제약: unique(category_id, day_sequence)
+
+
+이 조합 자체가 바로 “애그리거트 식별자”에 해당한다.
+
+즉,
+
+
+  “이 DailyContent가 누구인가?” → CategoryId + DaySequence로 설명 가능
+  “이 세트를 하나로 보고 관리한다” → 애그리거트 루트로서 DailyContent가 적합
+
+
+
+
+4. 왜 NewsItem / Quiz는 루트가 아니라 엔티티인가?
+
+4.1. 독립성 vs 종속성
+
+NewsItem과 Quiz는 둘 다 엔티티다.
+
+ID도 있고, 각각 수정/삭제가 가능하다. 그런데도 애그리거트 루트로 올리지 않았다.
+
+이유는 단순하다.
+
+
+  NewsItem/Quiz는 DailyContent 없이는 비즈니스적으로 의미가 거의 없다.
+    
+      “돈의 흐름 3일차 2번 뉴스”라는 문맥이 있어야만 의미가 생김
+      “혼자 떠다니는 뉴스 엔티티”를 외부에 직접 노출할 필요가 없다
+    
+  
+  라이프사이클도 DailyContent에 종속된다.
+    
+      3일차를 삭제하면 그 아래 뉴스/퀴즈도 같이 사라지는 것이 자연스럽다.
+      “퀴즈만 남아있는 3일차 없는 데이터” 같은 상태는 원하지 않는다.
+    
+  
+
+
+그래서 NewsItem / Quiz는:
+
+
+  개별적으로 식별 가능한 엔티티이긴 하지만
+  트랜잭션/일관성/수명 관점에서는 DailyContent 내부의 구성 요소
+
+
+로 보는 것이 더 자연스러웠다.
+
+4.2. 만약 News/Quiz를 각각 애그리거트 루트로 만들었다면?
+
+반대로 설계했다면 이런 형태가 된다.
+
+
+  NewsItem 이 독립 애그리거트 → /news/{id} 로 직접 관리
+  Quiz 가 독립 애그리거트 → “퀴즈 관리 시스템”처럼 동작
+
+
+그럼 이런 문제가 바로 튀어나온다.
+
+
+  “3일차 전체 롤백”이 어려워진다.
+    
+      DailyContent, 관련 NewsItem, Quiz를 서로 다른 애그리거트로 나눠버리면
+      롤백/수정 시에 여러 애그리거트를 동시에 건드리는 복잡한 트랜잭션이 필요
+    
+  
+  “3일차를 추가한다” 같은 간단한 요구도
+    
+      DailyContent 생성
+      관련 NewsItem 애그리거트 여러 개 생성
+      관련 Quiz 애그리거트 여러 개 생성
+      
+        이들을 서로 참조 연결
+
+        같이 분산된 작업이 된다.
+      
+    
+  
+
+
+그래서 초반 설계 단계에서:
+
+
+  “3일차 전체”가 하나의 트랜잭션 단위
+  그 아래 News/Quiz는 그냥 종속 엔티티
+
+
+로 두는 것이 맞다고 판단했다.
+
+
+
+5. 왜 나머지는 값 객체(VO)로 만들었는가?
+
+DailyContent 애그리거트 안에는 많은 VO가 있다.
+
+
+  CategoryId
+  DaySequence
+  Keyword
+  ContentDescription
+  ImageFile
+  WebLink
+  NewsItemOrder, QuestionOrder
+  AnswerIndex, QuizOptions, QuizOption …
+
+
+이걸 그냥 다 String, Long, int 로 두고 진행할 수도 있었지만, 의도적으로 값 객체로 빼냈다.
+
+5.1. “의미 있는 타입”으로 만들기
+
+예를 들어 CategoryId를 Long 대신 VO로 만든 이유는:
+
+
+  Long 타입만 보면 “이 숫자가 뭔데?”가 전혀 안 보인다.
+  실수로 memberId를 넣어도 컴파일이 된다.
+  null, 0, 음수 같은 값도 아무렇지 않게 들어간다.
+
+
+CategoryId VO로 만들면:
+
+
+  타입 이름만 봐도 “카테고리 식별자”라는 의미가 코드에 드러난다.
+  생성자에서 “양수만 허용” 같은 비즈니스 규칙을 강제할 수 있다.
+  잘못된 타입이 섞이는 것을 컴파일 단계에서 막을 수 있다.
+
+
+DDD의 좋은 값 객체는:
+
+
+  “이것이 무엇을 뜻하는지” 를 타입 이름에 담고
+  “어떤 값이 허용/금지되는지” 를 생성 시점에 검증한다.
+
+
+5.2. 검증 로직을 도메인 내부로 밀어넣기
+
+Keyword, ContentDescription, WebLink, ImageFile, AnswerIndex, QuizOptions 등은
+
+모두 “검증을 어디에 둘 것인가?”라는 문제와 직결되어 있다.
+
+
+  Controller/Service마다 if (title.length() &gt; 200) 같은 코드를 반복할 수도 있지만,
+  그러면 중복 + 누락 + 일관성 깨짐의 가능성이 커진다.
+
+
+대신 VO에 넣으면:
+
+
+  한 곳에서만 규칙을 정의하면 된다.
+  규칙이 바뀌면 그 값 타입만 바꾸면 된다.
+  엔티티는 “유효성이 보장된 값 타입들만 조합”하도록 만들 수 있다.
+
+
+즉, 엔티티는 조립, VO는 검증이라는 역할 분리가 생긴다.
+
+
+
+6. 정리: 이 설계가 말하고 싶은 것
+
+이 글에서 하고 싶은 말은 사실 딱 하나다.
+
+
+  “우리는 DB 테이블을 설계한 게 아니라,
+
+  ‘하루치 학습 경험’이라는 도메인 개념을 코드로 옮겼다.”
+
+
+
+그래서
+
+
+  DailyContent를 애그리거트 루트로 잡았고
+  News/Quiz를 그 아래 엔티티로 두었고
+  나머지는 값 객체로 잘게 쪼개서 의미와 규칙을 타입에 담았다.
+
+
+다음 글들에서는 이 안에서:
+
+
+  코드를 통해서 애그리거트 분석하기
+  AbstractSequence를 써서 DaySequence / QuestionOrder / NewsItemOrder를 어떻게 통합했는지
+  QuizOptions를 JSON으로 매핑하면서도 도메인 모델을 “JSON 냄새”로부터 어떻게 지켜냈는지
+
+
+같은 조금 더 디테일한 주제들을 풀어볼 수 있다.
+
+                        </a>
+                        <div class="info-post">
+                                <a href="/Architecture" class="category">Architecture</a>
+                            
+                                <span class="date">· 2025-12-11</span>
+                            
+                        </div>
+                    </div>
+                </div>
+            </li>
+        
+        
         <li class="paginated-item">
                 <div id="article_content">
                     <div class="thumbnail_zone">
@@ -797,12 +1941,12 @@ Content-Type: application/x-www-form-urlencoded;charset=utf-8
                 <div id="article_content">
                     <div class="thumbnail_zone">
                         
-                            <a href="/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html" class="thumbnail_post" loading="lazy" aria-label="thumbnail_post" style="background-image:url('/assets/img/thumbnail/at-least-once-notification-redis-queue-blmove-idempotency.png') !important"></a>
+                            <a href="/Architecture/System%20Design/at-least-once-notification-redis-queue-blmove-idempotency.html" class="thumbnail_post" loading="lazy" aria-label="thumbnail_post" style="background-image:url('/assets/img/thumbnail/at-least-once-notification-redis-queue-blmove-idempotency.png') !important"></a>
                         
                     </div>
                     <div class="box_contents">
-                        <a href="/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html"><h1 class="title_post">[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계</h1></a>
-                        <a href="/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html" class="txt_post">
+                        <a href="/Architecture/System%20Design/at-least-once-notification-redis-queue-blmove-idempotency.html"><h1 class="title_post">[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계</h1></a>
+                        <a href="/Architecture/System%20Design/at-least-once-notification-redis-queue-blmove-idempotency.html" class="txt_post">
                             [시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계
 
 1. 시스템 목표
@@ -1414,10 +2558,21 @@ PROCESSING 상태는 ‘보냈을 수도 있고 안 보냈을 수도 있는’ �
 
         posts.push({
             'title'    : "Index",
-            'path'     : "Architecture > api-design",
+            'path'     : "Architecture > Domain Design",
             'type'     : "category",
             'tags'     : "",
-            'url'      : "/Architecture/api-design/index.html",
+            'url'      : "/Architecture/Domain%20Design/index.html",
+            'image'    : "/assets/img/thumbnail/empty.jpg",
+            'date'     : "1900-01-01"
+        });
+    
+
+        posts.push({
+            'title'    : "Index",
+            'path'     : "Architecture > System Design",
+            'type'     : "category",
+            'tags'     : "",
+            'url'      : "/Architecture/System%20Design/index.html",
             'image'    : "/assets/img/thumbnail/empty.jpg",
             'date'     : "1900-01-01"
         });
@@ -1451,17 +2606,6 @@ PROCESSING 상태는 ‘보냈을 수도 있고 안 보냈을 수도 있는’ �
             'type'     : "category",
             'tags'     : "",
             'url'      : "/Architecture/security-auth/index.html",
-            'image'    : "/assets/img/thumbnail/empty.jpg",
-            'date'     : "1900-01-01"
-        });
-    
-
-        posts.push({
-            'title'    : "Index",
-            'path'     : "Architecture > system-design",
-            'type'     : "category",
-            'tags'     : "",
-            'url'      : "/Architecture/system-design/index.html",
             'image'    : "/assets/img/thumbnail/empty.jpg",
             'date'     : "1900-01-01"
         });
@@ -1612,10 +2756,10 @@ PROCESSING 상태는 ‘보냈을 수도 있고 안 보냈을 수도 있는’ �
 
         posts.push({
             'title'    : "[시스템 설계] 하루 한 번 알림을 “누락 없이” 보내기 위한 Redis 큐 &amp; 워커 설계",
-            'path'     : "Architecture > system-design",
+            'path'     : "Architecture > System Design",
             'type'     : "post",
             'tags'     : "redis, worker, at-least-once-notification, spring schedule, blmove, redis-queue-blmove-idempotency",
-            'url'      : "/Architecture/system-design/at-least-once-notification-redis-queue-blmove-idempotency.html",
+            'url'      : "/Architecture/System%20Design/at-least-once-notification-redis-queue-blmove-idempotency.html",
             'image'    : "/assets/img/thumbnail/at-least-once-notification-redis-queue-blmove-idempotency.png",
             'date'     : "2025-11-03"
         });
@@ -1651,6 +2795,28 @@ PROCESSING 상태는 ‘보냈을 수도 있고 안 보냈을 수도 있는’ �
             'url'      : "/Trouble%20Shooting/nginx-https-without-domain-nip-io.html",
             'image'    : "/assets/img/thumbnail/nginx-https-without-domain-nip-io.png",
             'date'     : "2025-12-09"
+        });
+    
+
+        posts.push({
+            'title'    : "[ONECO DDD 도메인 설계 시리즈 Part 1] DailyContent 애그리거트 설계 스토리",
+            'path'     : "Architecture > Domain Design",
+            'type'     : "post",
+            'tags'     : "DDD, domain-driven design, domain design, architecture, aggregate, domain model, entity, value object",
+            'url'      : "/Architecture/Domain%20Design/oneco-ddd-dailycontent-1.html",
+            'image'    : "/assets/img/thumbnail/oneco-ddd-dailycontent.png",
+            'date'     : "2025-12-11"
+        });
+    
+
+        posts.push({
+            'title'    : "[ONECO DDD 도메인 설계 시리즈 Part 2] DailyContent 애그리거트 뜯어보기",
+            'path'     : "Architecture > Domain Design",
+            'type'     : "post",
+            'tags'     : "DDD, domain-driven design, domain design, architecture, aggregate, domain model, entity",
+            'url'      : "/Architecture/Domain%20Design/oneco-ddd-dailycontent-2.html",
+            'image'    : "/assets/img/thumbnail/oneco-ddd-dailycontent.png",
+            'date'     : "2025-12-12"
         });
     
 

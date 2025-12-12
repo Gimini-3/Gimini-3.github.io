@@ -129,22 +129,12 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 window.addEventListener('load', function(){
-    // Page Hits
-    const pageHits = document.getElementById('page-hits');
+    // Page views (per post)
+    const pageViews = document.getElementById('page-views');
 
-    if (pageHits) {
-        const goatcounterCode = pageHits.getAttribute('usercode');
-        const requestURL = 'https://' 
-            + goatcounterCode 
-            + '.goatcounter.com/counter/' 
-            + encodeURIComponent(location.pathname) 
-            + '.json';
-
-        var resp = new XMLHttpRequest();
-        resp.open('GET', requestURL);
-        resp.onerror = function() { pageHits.innerText = "0"; };
-        resp.onload = function() { pageHits.innerText = JSON.parse(this.responseText).count; };
-        resp.send();
+    if (pageViews && window.CountAPI) {
+        const pageKey = pageViews.getAttribute('data-count-key') || location.pathname;
+        window.CountAPI.updateCounter(`post-${pageKey}`, pageViews, true);
     }
 
     // Highlighter
