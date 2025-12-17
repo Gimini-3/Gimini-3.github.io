@@ -12,7 +12,6 @@ tags:
   - value object
 thumbnail: "/assets/img/thumbnail/oneco-ddd-dailycontent.png"
 ---
-
 # [ONECO DDD 도메인 설계 시리즈 Part 4] 왜 DailyContent → News/Quiz(Entity)는 단방향으로만 묶었을까?
 
 ## 0. 이 글에서 이야기할 것
