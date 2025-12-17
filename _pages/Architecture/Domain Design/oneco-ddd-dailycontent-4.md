@@ -24,7 +24,7 @@ oneco 콘텐츠의 도메인은 이렇게 생겼다.
 - 그날 풀게 될 퀴즈들: `Quiz` (엔티티 리스트)
 
 ### 도메인 구조
-
+<img width="1649" height="669" alt="image" src="https://github.com/user-attachments/assets/833aebf4-bee3-4e6a-8c38-166fabf5962b" />
 
 이번 글에서 이야기할 주제는 다음과 같다.
 
