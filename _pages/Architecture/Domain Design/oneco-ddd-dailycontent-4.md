@@ -1,5 +1,5 @@
 ---
-title: "[ONECO DDD 도메인 설계 시리즈 Part 4]  왜 DailyContent → News/Quiz(Entity)는 단방향으로만 묶었을까?
+title: "[ONECO DDD 도메인 설계 시리즈 Part 4]  왜 DailyContent → News/Quiz(Entity)는 단방향으로만 묶었을까?"
 date: 2025-12-17 13:57:00 +0900
 tags:
   - DDD
